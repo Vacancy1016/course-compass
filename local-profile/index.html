@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Compass 大学航线 · 航线驾驶舱</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2efe3; --paper:#fdfbf2; --paper2:#f8f4e6;
+  --ink:#1c2f28; --muted:#63705f; --line:#d9d2b8; --line2:#c8c0a2;
+  --accent:#1f6a52; --accent-deep:#124636; --soft:#e6ecdb; --soft2:#dfe7d0;
+  --warm:#f4e7d3; --warmline:#e2cfae;
+  --red:#a5382a; --redsoft:#f6e4dd; --redline:#e0b4a6;
+  --amber:#9a6a10; --ambersoft:#f7ecd2; --amberline:#e3cd97;
+  --sea:#122b24; --sea2:#1a3a30; --seatext:#c9dccd; --seamuted:#7fa08d;
+  --green:#3b6d11; --green-bg:#eaf3de; --green-line:#b9d494;
+  --orange:#9b4c2d; --orange-bg:#faeeda; --orange-line:#e0bd97;
+  --purple:#534ab7; --purple-bg:#eeedfe; --purple-line:#c3bdf0;
+  --blue:#185fa5; --blue-bg:#e6f1fb; --blue-line:#a9cbe8;
+  --serif:'Noto Serif SC',serif;
+  --sans:'Manrope','Microsoft YaHei',sans-serif;
+  --shadow:0 1px 2px rgba(28,47,40,.05),0 8px 24px -12px rgba(28,47,40,.18);
+  --shadow-lg:0 2px 4px rgba(28,47,40,.06),0 20px 48px -16px rgba(28,47,40,.28);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font:15px/1.7 var(--sans);color:var(--ink);background:var(--bg);
+  background-image:
+    radial-gradient(1100px 500px at 85% -10%, rgba(31,106,82,.07), transparent 60%),
+    radial-gradient(900px 600px at -10% 110%, rgba(154,106,16,.06), transparent 55%),
+    repeating-linear-gradient(0deg, transparent 0 79px, rgba(28,47,40,.045) 79px 80px),
+    repeating-linear-gradient(90deg, transparent 0 79px, rgba(28,47,40,.045) 79px 80px);
+  background-attachment:fixed;
+}
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .03 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+::selection{background:var(--accent);color:#fff}
+*{scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--paper2)}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:6px;border:2px solid var(--paper2)}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+h1,h2,h3{margin:0}
+p{margin:0 0 10px}
+p:last-child{margin-bottom:0}
+
+/* ---------- shell ---------- */
+[hidden]{display:none!important}
+#account-gate{max-width:440px;margin:10vh auto;padding:24px}
+#account-gate .field{margin:12px 0}
+#vault-error{position:sticky;top:0;z-index:100;padding:10px;background:var(--redsoft);color:var(--red)}
+#profile-history{width:min(92vw,640px);max-height:80vh;overflow:auto;border:1px solid var(--line);border-radius:14px;padding:22px;background:var(--paper);color:var(--ink)}
+#profile-history::backdrop{background:#17241d77}
+#profile-history h2{margin-top:0}
+#confirmed-view li{overflow-wrap:anywhere}
+#app{display:flex;min-height:100vh}
+#sidebar{
+  width:248px;flex:0 0 248px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;
+  background:linear-gradient(178deg,var(--sea) 0%,var(--sea2) 70%,#1e4437 100%);
+  color:var(--seatext);z-index:40;overflow-y:auto;
+  background-image:
+    radial-gradient(400px 260px at 110% 0%, rgba(143,214,180,.10), transparent 60%),
+    repeating-linear-gradient(0deg, transparent 0 47px, rgba(201,220,205,.05) 47px 48px),
+    repeating-linear-gradient(90deg, transparent 0 47px, rgba(201,220,205,.05) 47px 48px),
+    linear-gradient(178deg,var(--sea) 0%,var(--sea2) 70%,#1e4437 100%);
+}
+.brand{display:flex;align-items:center;gap:12px;padding:22px 20px 18px;border-bottom:1px solid rgba(201,220,205,.14)}
+.brand svg{flex:0 0 40px}
+.brand-name{font-family:var(--serif);font-weight:900;font-size:17px;color:#f2f7ee;line-height:1.3}
+.brand-sub{font-size:10.5px;letter-spacing:2.5px;color:var(--seamuted);text-transform:uppercase}
+.nav{padding:14px 12px;display:flex;flex-direction:column;gap:4px;flex:1}
+.nav-label{font-size:10.5px;letter-spacing:2px;color:var(--seamuted);padding:8px 10px 6px;font-weight:700}
+.nav-item{
+  display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:10px 12px;border-radius:10px;
+  background:transparent;border:1px solid transparent;color:var(--seatext);font-size:13.5px;font-weight:600;
+  transition:background .15s,border-color .15s,transform .15s;position:relative;
+}
+.nav-item svg{flex:0 0 18px;opacity:.85}
+.nav-item:hover{background:rgba(201,220,205,.09);transform:translateX(2px)}
+.nav-item.active{background:rgba(143,214,180,.14);border-color:rgba(143,214,180,.35);color:#fff}
+.nav-item.active::before{content:'';position:absolute;left:-12px;top:20%;bottom:20%;width:3px;border-radius:2px;background:#8fd6b4}
+.nav-item .n-badge{margin-left:auto;font-size:10.5px;background:rgba(143,214,180,.2);color:#a9e3c6;padding:1px 7px;border-radius:99px;font-weight:700}
+.side-profile{margin:10px 12px;padding:13px 14px;border-radius:12px;background:rgba(0,0,0,.22);border:1px solid rgba(201,220,205,.14);font-size:12.5px}
+.side-profile .sp-name{font-weight:700;color:#eef5ec;font-size:13px;margin-bottom:2px}
+.side-profile .sp-meta{color:var(--seamuted);line-height:1.55}
+.sp-dots{display:flex;gap:5px;margin-top:8px}
+.sp-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid rgba(201,220,205,.3)}
+.sp-dot.on{border-color:transparent}
+.side-foot{padding:12px;border-top:1px solid rgba(201,220,205,.14)}
+.side-foot button{width:100%;background:transparent;border:1px solid rgba(201,220,205,.25);color:var(--seamuted);border-radius:9px;padding:7px;font-size:12px}
+.side-foot button:hover{color:#fff;border-color:rgba(201,220,205,.5)}
+
+#main{flex:1;min-width:0;display:flex;flex-direction:column}
+#topbar{
+  position:sticky;top:0;z-index:30;height:64px;display:flex;align-items:center;gap:14px;padding:0 32px;
+  background:rgba(242,239,227,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+}
+#hamburger{display:none;background:var(--paper);border:1px solid var(--line);border-radius:9px;width:40px;height:40px;font-size:17px}
+.crumb{font-size:13px;color:var(--muted)}
+.crumb b{color:var(--ink);font-weight:700}
+.crumb .sep{margin:0 8px;color:var(--line2)}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.date-chip{font-size:12px;color:var(--muted);background:var(--paper);border:1px solid var(--line);padding:5px 12px;border-radius:99px;font-variant-numeric:tabular-nums}
+#radar-bell{position:relative;width:42px;height:42px;border-radius:11px;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center;transition:border-color .15s,box-shadow .15s}
+#radar-bell:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+#radar-bell .badge{position:absolute;top:-5px;right:-5px;min-width:19px;height:19px;border-radius:99px;background:var(--red);color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center;padding:0 5px;border:2px solid var(--bg)}
+#radar-bell .badge.zero{display:none}
+#view{flex:1;padding:30px 32px 60px;max-width:1240px;width:100%;margin:0 auto}
+
+/* ---------- shared ---------- */
+.kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--accent);font-weight:800;margin-bottom:10px;text-transform:uppercase}
+.page-title{font-family:var(--serif);font-weight:900;font-size:30px;line-height:1.35;letter-spacing:-.5px;margin-bottom:8px}
+.page-title em{font-style:normal;color:var(--accent)}
+.page-sub{color:var(--muted);font-size:14.5px;max-width:860px;margin-bottom:24px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);min-width:0}
+.card.flat{box-shadow:none}
+.label{font-size:11px;color:var(--muted);font-weight:800;letter-spacing:1.5px;margin-bottom:10px;text-transform:uppercase}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.btn{background:var(--paper);border:1px solid var(--line2);border-radius:10px;padding:9px 18px;font-size:13.5px;font-weight:700;min-height:42px;transition:all .15s}
+.btn:hover:not(:disabled){border-color:var(--accent);background:var(--soft)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover:not(:disabled){background:var(--accent-deep);border-color:var(--accent-deep)}
+.btn.small{padding:5px 12px;font-size:12px;min-height:32px;border-radius:8px}
+.btn.danger-ghost{color:var(--red);border-color:var(--redline)}
+.btn.danger-ghost:hover:not(:disabled){background:var(--redsoft);border-color:var(--red)}
+.pill{display:inline-block;font-size:11.5px;font-weight:700;background:var(--soft);color:var(--accent-deep);padding:3px 11px;border-radius:99px;margin:0 6px 6px 0}
+.tag{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:5px;background:var(--soft);color:var(--accent);vertical-align:2px;margin-left:6px}
+.tag.warn{background:var(--ambersoft);color:var(--amber)}
+.tag.red{background:var(--redsoft);color:var(--red)}
+.tag.blue{background:var(--blue-bg);color:var(--blue)}
+.boundary{margin-top:16px;padding:12px 16px;border-left:3px solid var(--orange);background:var(--warm);border-radius:0 10px 10px 0;font-size:13px;line-height:1.7}
+.boundary b{color:var(--orange)}
+.statement{margin-top:20px;padding:18px 22px;background:linear-gradient(120deg,var(--ink),#2a4438);color:#f2f5e9;border-radius:14px;font-size:15.5px;line-height:1.75;font-family:var(--serif);font-weight:600;box-shadow:var(--shadow)}
+.statement em{font-style:normal;color:#8fd6b4}
+.footnote{font-size:12px;color:var(--muted);line-height:1.7;margin-top:14px}
+.empty{padding:44px 30px;text-align:center;border:1.5px dashed var(--line2);border-radius:14px;color:var(--muted);background:rgba(253,251,242,.6)}
+.empty .big{font-size:34px;margin-bottom:10px}
+.empty h3{font-family:var(--serif);font-size:18px;color:var(--ink);margin-bottom:6px}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+mark{background:var(--ambersoft);color:var(--amber);border-radius:3px;padding:0 3px;font-weight:700;border-bottom:2px solid var(--amberline)}
+
+/* tone helpers */
+.tone-green{--tone:var(--green);--tone-bg:var(--green-bg);--tone-line:var(--green-line)}
+.tone-orange{--tone:var(--orange);--tone-bg:var(--orange-bg);--tone-line:var(--orange-line)}
+.tone-purple{--tone:var(--purple);--tone-bg:var(--purple-bg);--tone-line:var(--purple-line)}
+.tone-blue{--tone:var(--blue);--tone-bg:var(--blue-bg);--tone-line:var(--blue-line)}
+
+/* ---------- module entrance ---------- */
+.view-enter{animation:viewIn .4s cubic-bezier(.2,.7,.3,1) both}
+@keyframes viewIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.stagger>*{animation:viewIn .45s cubic-bezier(.2,.7,.3,1) both}
+.stagger>*:nth-child(1){animation-delay:.03s}.stagger>*:nth-child(2){animation-delay:.09s}
+.stagger>*:nth-child(3){animation-delay:.15s}.stagger>*:nth-child(4){animation-delay:.21s}
+.stagger>*:nth-child(5){animation-delay:.27s}.stagger>*:nth-child(6){animation-delay:.33s}
+
+/* ---------- embedded pager ---------- */
+.pager{display:flex;align-items:center;gap:14px;margin-top:26px;padding:14px 18px;background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);flex-wrap:wrap}
+.pager .dots{display:flex;gap:6px;align-items:center;flex:1;flex-wrap:wrap}
+.pdot{display:flex;align-items:center;gap:7px;background:transparent;border:1px solid transparent;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--muted)}
+.pdot i{font-style:normal;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line2);display:grid;place-items:center;font-size:10.5px;transition:all .2s}
+.pdot.done i{background:var(--soft2);border-color:var(--accent);color:var(--accent)}
+.pdot.cur{color:var(--ink);border-color:var(--line);background:var(--paper2)}
+.pdot.cur i{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 0 4px var(--soft)}
+.pager .pbtns{display:flex;gap:8px}
+
+/* ---------- dashboard ---------- */
+.dash-hero{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;margin-bottom:16px}
+.hero-card{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--sea) 0%,#1d453a 60%,#245844 100%);color:#eef5ec;border-radius:16px;padding:26px 28px;box-shadow:var(--shadow-lg)}
+.hero-card::before{content:'';position:absolute;inset:0;background:
+  repeating-linear-gradient(0deg,transparent 0 39px,rgba(201,220,205,.06) 39px 40px),
+  repeating-linear-gradient(90deg,transparent 0 39px,rgba(201,220,205,.06) 39px 40px);pointer-events:none}
+.hero-card::after{content:'';position:absolute;right:-70px;top:-70px;width:260px;height:260px;border-radius:50%;border:1.5px dashed rgba(143,214,180,.35);pointer-events:none;animation:slowspin 60s linear infinite}
+@keyframes slowspin{to{transform:rotate(360deg)}}
+.hero-card .kicker{color:#8fd6b4}
+.hero-card h2{font-family:var(--serif);font-weight:900;font-size:24px;line-height:1.4;margin-bottom:10px}
+.hero-card .hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;position:relative}
+.hero-chip{font-size:12px;background:rgba(0,0,0,.28);border:1px solid rgba(143,214,180,.3);padding:4px 12px;border-radius:99px;color:#cfe6d6}
+.hero-card .btn{position:relative;margin-top:18px}
+.week-card{background:linear-gradient(150deg,var(--ambersoft),#fbf4e2);border:1px solid var(--amberline);border-radius:16px;padding:22px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.week-card .label{color:var(--amber)}
+.week-card .week-task{font-family:var(--serif);font-weight:700;font-size:16.5px;line-height:1.65;flex:1}
+.week-check{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:13px;font-weight:700;color:var(--amber);cursor:pointer;user-select:none}
+.week-check input{width:19px;height:19px;accent-color:var(--amber);cursor:pointer}
+.week-check.done .week-task-line{text-decoration:line-through}
+.count-card{position:relative;border-radius:14px;padding:18px;background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--tone,var(--line2));box-shadow:var(--shadow);transition:transform .18s,box-shadow .18s;overflow:hidden}
+.count-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.count-card .cc-name{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.count-card .cc-letter{width:24px;height:24px;border-radius:7px;background:var(--tone);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800}
+.count-card .cc-days{font-family:var(--serif);font-weight:900;font-size:38px;line-height:1.15;color:var(--tone);margin:10px 0 2px;font-variant-numeric:tabular-nums}
+.count-card .cc-days small{font-size:14px;font-weight:700;margin-left:3px}
+.count-card .cc-event{font-size:12.5px;color:var(--muted);line-height:1.5}
+.count-card .cc-flag{position:absolute;top:14px;right:14px;font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:99px}
+.cc-flag.on{background:var(--tone-bg);color:var(--tone)}
+.cc-flag.off{background:var(--paper2);color:var(--muted);border:1px solid var(--line)}
+.count-card.dim{opacity:.72}
+.radar-feed{display:flex;flex-direction:column;gap:12px}
+.radar-item{display:flex;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);position:relative;transition:border-color .15s}
+.radar-item:hover{border-color:var(--line2)}
+.radar-item .ri-icon{flex:0 0 38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:17px}
+.ri-icon.t-know{background:var(--purple-bg);color:var(--purple)}
+.ri-icon.t-days{background:var(--redsoft);color:var(--red)}
+.ri-icon.t-gate{background:var(--blue-bg);color:var(--blue)}
+.ri-icon.t-trap{background:var(--ambersoft);color:var(--amber)}
+.ri-icon.t-week{background:var(--soft);color:var(--accent)}
+.radar-item .ri-body{flex:1;min-width:0}
+.radar-item .ri-title{font-weight:800;font-size:14px;margin-bottom:3px}
+.radar-item .ri-text{font-size:13px;color:var(--muted);line-height:1.65}
+.radar-item .ri-src{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center;font-size:11px;color:var(--muted)}
+.lv{font-weight:800;font-size:10px;padding:1px 7px;border-radius:4px}
+.lv.A{background:var(--soft);color:var(--accent-deep)}
+.lv.B{background:var(--blue-bg);color:var(--blue)}
+.lv.C{background:var(--ambersoft);color:var(--amber)}
+.ri-dismiss{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:7px;border:none;background:transparent;color:var(--muted);font-size:14px;line-height:1}
+.ri-dismiss:hover{background:var(--redsoft);color:var(--red)}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.fchip{font-size:12px;font-weight:700;padding:5px 13px;border-radius:99px;border:1px solid var(--line2);background:var(--paper);color:var(--muted)}
+.fchip.on{background:var(--ink);border-color:var(--ink);color:#f2f5e9}
+
+/* ---------- profile form ---------- */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+.field label{font-size:12.5px;font-weight:800;color:var(--ink)}
+.field-error{color:var(--red);font-size:12px}
+.field-error:empty,#pct-preview:empty{display:none}
+.field input[aria-invalid="true"]{border-color:var(--red)}
+.field label small{font-weight:600;color:var(--muted)}
+.field input,.field select,.field textarea{
+  background:var(--paper);border:1.5px solid var(--line2);border-radius:10px;padding:10px 13px;font-size:14px;min-height:44px;transition:border-color .15s,box-shadow .15s;width:100%;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--soft);outline:none}
+.field .hint{font-size:11.5px;color:var(--muted)}
+.pct-preview{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;font-weight:700;background:var(--soft);border-radius:99px;padding:6px 15px;color:var(--accent-deep)}
+.list-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid var(--line);border-radius:11px;background:var(--paper);margin-bottom:9px}
+.list-row .lr-main{flex:1;min-width:0}
+.list-row .lr-title{font-weight:700;font-size:13.5px}
+.list-row .lr-sub{font-size:12px;color:var(--muted)}
+.list-row .lr-del{width:30px;height:30px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--muted);font-size:14px}
+.list-row .lr-del:hover{background:var(--redsoft);color:var(--red);border-color:var(--redline)}
+.add-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.add-row input{flex:1;min-width:180px;background:var(--paper);border:1.5px solid var(--line2);border-radius:10px;padding:9px 13px;min-height:42px}
+.add-row select{background:var(--paper);border:1.5px solid var(--line2);border-radius:10px;padding:9px 12px;min-height:42px}
+.suggest-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.sug{font-size:12px;font-weight:700;border:1px dashed var(--line2);background:transparent;border-radius:99px;padding:4px 12px;color:var(--muted)}
+.sug:hover{border-color:var(--accent);color:var(--accent);background:var(--soft)}
+.range-wrap{display:flex;align-items:center;gap:16px}
+.range-wrap input[type=range]{flex:1;accent-color:var(--accent);height:6px}
+.range-val{font-family:var(--serif);font-weight:900;font-size:30px;color:var(--accent);min-width:96px;text-align:right;font-variant-numeric:tabular-nums}
+.range-val small{font-size:13px;font-weight:700;color:var(--muted)}
+.summary-box{background:var(--soft);border:1px solid var(--soft2);border-radius:14px;padding:18px 20px;font-size:13.5px;line-height:2}
+.summary-box b{color:var(--accent-deep)}
+/* course acquisition */
+.seg{display:flex;gap:6px;background:var(--paper2);border:1px solid var(--line);border-radius:12px;padding:5px;margin-bottom:16px;flex-wrap:wrap}
+.seg button{flex:1;min-width:110px;border:none;background:transparent;border-radius:9px;padding:9px 12px;font-size:13px;font-weight:700;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s}
+.seg button:hover{color:var(--ink)}
+.seg button.on{background:var(--accent);color:#fff;box-shadow:var(--shadow)}
+.dropzone{border:2px dashed var(--line2);border-radius:14px;padding:26px 20px;text-align:center;background:var(--paper2);cursor:pointer;transition:all .18s}
+.dropzone:hover,.dropzone.drag{border-color:var(--accent);background:var(--soft)}
+.dropzone .dz-icon{font-size:30px;line-height:1}
+.dropzone .dz-title{font-weight:800;font-size:14.5px;margin:8px 0 3px}
+.dropzone .dz-sub{font-size:12px;color:var(--muted)}
+.or-divider{display:flex;align-items:center;gap:12px;margin:14px 0;color:var(--muted);font-size:12px}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--line)}
+.plan-text{width:100%;min-height:88px;resize:vertical;background:var(--paper);border:1.5px solid var(--line2);border-radius:10px;padding:11px 14px;font-size:13.5px;line-height:1.8}
+.plan-text:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--soft);outline:none}
+.acq-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:16px 0 8px}
+.acq-head .ah-title{font-weight:800;font-size:13.5px}
+.acq-note{font-size:11.5px;color:var(--muted);line-height:1.7;margin:0 0 12px}
+.rec-search{width:100%;background:var(--paper);border:1.5px solid var(--line2);border-radius:10px;padding:9px 14px;font-size:13px;margin-bottom:14px;min-height:42px}
+.rec-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--soft);outline:none}
+.rec-group{margin-bottom:14px}
+.rg-head{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:1px;margin-bottom:8px}
+.rg-head .rg-cat{padding:2px 11px;border-radius:6px;background:var(--soft);color:var(--accent-deep)}
+.rg-head .rg-count{margin-left:auto;color:var(--muted);font-weight:600;letter-spacing:0}
+.rec-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--paper);margin-bottom:7px;cursor:pointer;transition:border-color .15s,background .15s}
+.rec-row:hover{border-color:var(--line2)}
+.rec-row.sel{border-color:var(--accent);background:var(--soft)}
+.rec-row input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex:0 0 auto}
+.rec-row .rr-name{flex:1;font-size:13.5px;font-weight:600;min-width:0}
+.rec-row .rr-meta{display:flex;gap:6px;flex:0 0 auto;align-items:center}
+.cr-pill{font-size:10.5px;font-weight:700;background:var(--paper2);border:1px solid var(--line);color:var(--muted);padding:1px 8px;border-radius:99px;white-space:nowrap}
+.conf{font-size:10px;font-weight:800;padding:1px 7px;border-radius:4px;white-space:nowrap}
+.conf.hi{background:var(--soft);color:var(--accent-deep)}
+.conf.mid{background:var(--ambersoft);color:var(--amber)}
+.acq-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.acq-bar .count{font-size:13px;font-weight:700;color:var(--muted);margin-right:auto}
+.acq-bar .count b{color:var(--accent-deep)}
+@media(max-width:640px){.rec-row .rr-meta .cr-pill:nth-child(2){display:none}}
+
+/* ---------- path picker ---------- */
+.picker-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px}
+.path-opt{position:relative;text-align:left;padding:22px 18px;border:1.5px solid var(--line);border-radius:16px;background:var(--paper);min-height:200px;transition:transform .18s,box-shadow .18s,border-color .18s,background .18s;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.path-opt:hover{border-color:var(--tone);transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.path-opt.sel{border-color:var(--tone);background:linear-gradient(165deg,var(--tone-bg),var(--paper) 75%);box-shadow:0 0 0 1.5px var(--tone) inset,var(--shadow-lg)}
+.path-opt .pl{width:32px;height:32px;border-radius:9px;background:var(--tone);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px}
+.path-opt .pn{font-family:var(--serif);font-weight:900;font-size:22px;margin:13px 0 5px}
+.path-opt .pd{font-size:12.5px;color:var(--muted);line-height:1.65;flex:1}
+.path-opt .pw{font-size:11px;color:var(--tone);font-weight:700;margin-top:12px;line-height:1.55;border-top:1px dashed var(--tone-line);padding-top:9px}
+.path-opt .pcheck{position:absolute;top:16px;right:16px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line2);display:grid;place-items:center;font-size:13px;color:transparent;transition:all .18s;background:var(--paper)}
+.path-opt.sel .pcheck{background:var(--tone);border-color:var(--tone);color:#fff;transform:scale(1.08)}
+.picker-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.picker-bar .count{font-size:13.5px;color:var(--muted);margin-right:auto;font-weight:600}
+.picker-bar .count b{color:var(--ink)}
+
+/* ---------- diagnosis ---------- */
+.diag-banner{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:13px 18px;border-radius:13px;background:linear-gradient(120deg,var(--ink),#2a4438);color:#e9f2e6;font-size:13px;margin-bottom:18px}
+.diag-banner .chip{font-size:11.5px;font-weight:700;background:rgba(143,214,180,.16);border:1px solid rgba(143,214,180,.35);color:#a9e3c6;padding:3px 11px;border-radius:99px}
+.diag-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.dtab{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;padding:8px 16px;border-radius:99px;border:1.5px solid var(--line2);background:var(--paper);color:var(--muted);transition:all .15s}
+.dtab i{font-style:normal;width:9px;height:9px;border-radius:50%;background:var(--tone)}
+.dtab.on{border-color:var(--tone);background:var(--tone-bg);color:var(--tone)}
+.diag-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.diag-head h3{font-family:var(--serif);font-weight:900;font-size:24px}
+.verdict{font-size:12px;font-weight:800;color:var(--tone);background:var(--tone-bg);border:1px solid var(--tone-line);padding:4px 13px;border-radius:99px;white-space:nowrap}
+.remain-badge{font-size:12.5px;font-weight:800;color:var(--red);background:var(--redsoft);border:1px solid var(--redline);padding:4px 13px;border-radius:99px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.threshold-line{font-size:13.5px;color:var(--muted);margin:8px 0 20px;line-height:1.7}
+.threshold-line b{color:var(--ink)}
+.tl-track{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding-top:6px;margin:8px 0 4px}
+.tl-track::before{content:'';position:absolute;left:7%;right:7%;top:15px;height:2px;background:repeating-linear-gradient(90deg,var(--line2) 0 7px,transparent 7px 13px)}
+.tl-node{position:relative;text-align:center;padding-top:32px;min-width:0}
+.tl-node::before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);width:13px;height:13px;border-radius:50%;background:var(--paper);border:3px solid var(--tone);z-index:1}
+.tl-node.now::before{background:var(--tone);animation:pulse 2.2s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--tone) 45%,transparent)}70%{box-shadow:0 0 0 11px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.tl-node.hard::before{border-color:var(--red);background:var(--red)}
+.tl-date{font-size:10.5px;color:var(--muted);font-weight:800;line-height:1.4;min-height:30px;font-variant-numeric:tabular-nums}
+.tl-e{font-size:13px;font-weight:800;margin:3px 0;line-height:1.4}
+.tl-d{font-size:11px;color:var(--muted);line-height:1.55}
+.tl-flag{display:inline-block;font-size:9.5px;padding:1px 7px;border-radius:4px;margin-top:6px;font-weight:800}
+.tl-flag.now{background:var(--tone-bg);color:var(--tone)}
+.tl-flag.hard{background:var(--redsoft);color:var(--red)}
+.diag-actions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+.monday-card{background:linear-gradient(150deg,var(--ambersoft),#fbf4e2);border:1px solid var(--amberline);border-radius:13px;padding:16px 18px}
+.monday-card .label{color:var(--amber)}
+.monday-card .m-task{font-size:14px;font-weight:700;line-height:1.7}
+.translate-card{background:var(--tone-bg);border:1px solid var(--tone-line);border-radius:13px;padding:16px 18px}
+.translate-card .label{color:var(--tone)}
+.translate-card p{font-size:13.5px;line-height:1.75}
+
+/* ---------- conflict ---------- */
+.lane-toggles{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.lane-toggle{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:800;padding:6px 14px;border-radius:99px;border:1.5px solid var(--line2);background:var(--paper);color:var(--muted)}
+.lane-toggle i{font-style:normal;width:10px;height:10px;border-radius:3px;background:var(--tone);opacity:.4}
+.lane-toggle.on{border-color:var(--tone);background:var(--tone-bg);color:var(--tone)}
+.lane-toggle.on i{opacity:1}
+.chart-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--paper);padding:18px;box-shadow:var(--shadow)}
+.chart-wrap svg{min-width:640px;display:block}
+.lane-rect{transform-origin:left center;animation:grow .7s cubic-bezier(.2,.7,.3,1) both}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.calc-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:end;margin-bottom:16px}
+.calc-result{border-radius:16px;padding:24px;border:1.5px solid;position:relative;overflow:hidden}
+.calc-result.danger{background:linear-gradient(140deg,var(--redsoft),#fdf3ee);border-color:var(--redline)}
+.calc-result.warn{background:linear-gradient(140deg,var(--ambersoft),#fdf7e8);border-color:var(--amberline)}
+.calc-result.ok{background:linear-gradient(140deg,var(--soft),#f4f8ec);border-color:var(--green-line)}
+.calc-result .cr-big{font-family:var(--serif);font-weight:900;font-size:46px;line-height:1.1;font-variant-numeric:tabular-nums}
+.calc-result.danger .cr-big{color:var(--red)}
+.calc-result.warn .cr-big{color:var(--amber)}
+.calc-result.ok .cr-big{color:var(--green)}
+.calc-result .cr-title{font-weight:800;font-size:15px;margin:6px 0 8px}
+.calc-result .cr-body{font-size:13.5px;line-height:1.75;color:var(--ink)}
+.calc-quote{margin-top:14px;padding:12px 16px;background:rgba(253,251,242,.8);border-left:3px solid var(--ink);border-radius:0 10px 10px 0;font-size:13px;line-height:1.7;font-family:var(--serif)}
+.pair-list{display:flex;flex-direction:column;gap:10px}
+.pair-row{display:flex;gap:12px;align-items:flex-start;padding:13px 16px;border:1px solid var(--line);border-radius:12px;background:var(--paper);font-size:13px;line-height:1.65}
+.pair-row .pr-names{flex:0 0 128px;font-weight:800;font-size:12.5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.pair-row .pr-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* ---------- evidence ---------- */
+.ev-grid{display:grid;grid-template-columns:1fr 1.25fr;gap:18px;align-items:start}
+.ev-in{background:linear-gradient(160deg,var(--warm),#faf1e2);border:1px solid var(--warmline);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+.ev-in textarea{width:100%;min-height:150px;resize:vertical;background:var(--paper);border:1.5px solid var(--warmline);border-radius:11px;padding:13px 15px;font-size:14px;line-height:1.8}
+.ev-in .field{margin-bottom:12px;min-width:0}
+.ev-in .field select{width:100%;min-width:0}
+.ev-in #ev-materials{min-height:70px}
+.ev-in textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-bg);outline:none}
+.scenario-row{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 14px}
+.sc-chip{font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:99px;border:1px solid var(--warmline);background:var(--paper);color:var(--muted)}
+.sc-chip.on{background:var(--orange);border-color:var(--orange);color:#fff}
+.engine-box{margin-top:16px;padding:12px 14px;border:1px dashed var(--line2);border-radius:11px;background:rgba(253,251,242,.7);font-size:11.5px;color:var(--muted);line-height:1.7}
+.engine-box select{width:100%;margin:6px 0;background:var(--paper);border:1px solid var(--line2);border-radius:8px;padding:6px 10px;font-size:12px}
+.engine-box code{font-size:10.5px;background:var(--soft);padding:1px 6px;border-radius:4px;color:var(--accent-deep)}
+.ev-out{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);min-height:340px}
+.ev-status{display:flex;align-items:center;gap:12px;padding:14px 0;font-size:13px;font-weight:700;color:var(--accent)}
+.ev-status .spinner{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--soft2);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ev-progress{height:4px;background:var(--soft2);border-radius:2px;overflow:hidden;margin-bottom:16px}
+.ev-progress span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--green));width:0;transition:width .5s ease}
+.ev-section{border-top:1px solid var(--line);padding:15px 0;animation:viewIn .5s both}
+.ev-section:first-of-type{border-top:none;padding-top:4px}
+.ev-section .es-title{font-weight:800;font-size:14.5px;margin-bottom:8px;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.ev-section .es-body{font-size:13.5px;line-height:1.8;color:var(--ink)}
+.ev-section .es-body .muted{font-size:12.5px}
+.ev-bullet{display:flex;gap:9px;padding:7px 0;font-size:13.5px;line-height:1.7;border-bottom:1px dashed var(--line)}
+.ev-bullet:last-child{border-bottom:none}
+.ev-bullet::before{content:'▸';color:var(--accent);font-weight:800;flex:0 0 auto}
+.ev-hidden{margin-top:14px;padding:13px 16px;background:var(--redsoft);border:1px solid var(--redline);border-radius:11px;font-size:13px;line-height:1.75}
+.ev-hidden b{color:var(--red)}
+.ev-recognize{margin-bottom:14px;padding:12px 15px;background:var(--paper2);border:1px solid var(--line);border-radius:11px;font-size:12.5px;line-height:1.9;color:var(--muted)}
+.ev-recognize .label{margin-bottom:6px}
+
+/* ---------- radar drawer ---------- */
+#scrim{position:fixed;inset:0;background:rgba(18,43,36,.45);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .25s;z-index:50}
+#scrim.show{opacity:1;pointer-events:auto}
+#radar-drawer{position:fixed;top:0;right:0;bottom:0;width:400px;max-width:92vw;background:var(--bg);border-left:1px solid var(--line2);z-index:60;transform:translateX(102%);transition:transform .3s cubic-bezier(.2,.7,.3,1);display:flex;flex-direction:column;box-shadow:-16px 0 48px rgba(18,43,36,.2)}
+#radar-drawer.show{transform:none}
+.rd-head{display:flex;align-items:center;gap:10px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.rd-head h3{font-family:var(--serif);font-size:18px;font-weight:900;flex:1}
+.rd-head .btn{min-height:34px;padding:5px 12px;font-size:12px}
+.rd-body{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:11px}
+.rd-foot{padding:12px 20px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);line-height:1.6}
+
+/* ---------- toasts ---------- */
+#toasts{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:100;display:flex;flex-direction:column;gap:9px;align-items:center;pointer-events:none}
+.toast{background:var(--ink);color:#f2f5e9;font-size:13.5px;font-weight:600;padding:11px 20px;border-radius:12px;box-shadow:var(--shadow-lg);animation:toastIn .3s cubic-bezier(.2,.7,.3,1) both;display:flex;gap:9px;align-items:center;max-width:88vw}
+.toast.ok::before{content:'✓';color:#8fd6b4;font-weight:900}
+.toast.warn::before{content:'!';color:#f0c36d;font-weight:900}
+.toast.out{animation:toastOut .3s both}
+@keyframes toastIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateY(10px) scale(.96)}}
+
+/* ---------- 定向情报 + 引擎与技术 ---------- */
+:root{
+  --danger:var(--red); --danger-soft:var(--redsoft);
+  --warn:var(--amber); --warn-soft:var(--ambersoft);
+  --know:var(--purple); --know-soft:var(--purple-bg);
+  --sea-soft:var(--soft);
+}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.btn-sm{padding:5px 12px;font-size:12px;min-height:32px;border-radius:8px}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-primary:hover:not(:disabled){background:var(--accent-deep);border-color:var(--accent-deep)}
+.btn-ghost{background:var(--paper)}
+.input,.select{background:var(--paper);border:1.5px solid var(--line2);border-radius:10px;padding:9px 13px;font-size:13px;min-height:42px;color:var(--ink)}
+.input:focus,.select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--soft);outline:none}
+.tag-sm{font-size:10px;padding:2px 7px;margin-left:0}
+.tag-neutral{background:var(--paper2);color:var(--muted)}
+.lv-A{background:var(--soft);color:var(--accent-deep)}
+.lv-B{background:var(--blue-bg);color:var(--blue)}
+.lv-C{background:var(--ambersoft);color:var(--amber)}
+.fchip.active{background:var(--ink);border-color:var(--ink);color:#f2f5e9}
+.b-ico{font-size:16px;margin-right:6px}
+.why-chip{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;background:var(--soft);color:var(--accent-deep);border:1px solid var(--soft2)}
+.toast-act{margin-left:12px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;font-weight:800;font-size:12px;padding:3px 12px;border-radius:8px;cursor:pointer}
+.toast-act:hover{background:rgba(255,255,255,.32)}
+
+.intel-gate{text-align:center;padding:40px 28px;max-width:620px;margin:0 auto}
+.intel-gate .big{font-size:40px;display:block;margin-bottom:12px}
+.intel-gate h3{font-family:var(--serif);font-size:21px;margin-bottom:8px}
+.intel-gate p{color:var(--muted);font-size:14px;max-width:460px;margin:0 auto}
+.gate-checks{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.gate-chip{font-size:13px;font-weight:800;padding:7px 16px;border-radius:99px;border:1.5px solid var(--line2)}
+.gate-chip.ok{background:var(--green-bg);border-color:var(--green-line);color:var(--green)}
+.gate-chip.no{background:var(--redsoft);border-color:var(--redline);color:var(--red)}
+
+.intel-pushstrip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--sea);color:var(--seatext);border-radius:12px;padding:11px 16px;margin-bottom:16px;font-size:12px}
+.intel-pushstrip .ps-label{font-weight:800;color:#8fd6b4;letter-spacing:1px;margin-right:4px}
+.intel-pushstrip .ps-item{background:rgba(143,214,180,.12);border:1px solid rgba(143,214,180,.25);padding:3px 11px;border-radius:99px;font-weight:600}
+.intel-pushstrip .ps-dot{color:var(--seamuted)}
+
+.intel-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px 16px;margin-bottom:14px}
+.intel-chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.intel-feed{display:flex;flex-direction:column;gap:14px}
+.intel-card{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);transition:box-shadow .18s,transform .18s;animation:viewIn .4s both}
+.intel-card:hover{box-shadow:var(--shadow-lg)}
+.intel-card.is-read{opacity:.72;border-left-color:var(--line2)}
+.intel-card.is-open{border-left-color:var(--orange)}
+.intel-top{display:flex;gap:14px;align-items:flex-start}
+.intel-top .ri-icon{flex:0 0 40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:18px}
+.intel-head{flex:1;min-width:0}
+.intel-tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:7px}
+.intel-head h3{font-family:var(--serif);font-size:17.5px;line-height:1.4;font-weight:800}
+.intel-score{flex:0 0 auto;font-size:15px;font-weight:800;color:var(--accent);background:var(--soft);border:1px solid var(--soft2);border-radius:10px;padding:4px 10px;min-width:44px;text-align:center}
+.intel-body{font-size:13.5px;line-height:1.75;color:var(--ink);margin:12px 0 10px}
+.intel-why{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+.intel-why .why-label{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;margin-right:2px}
+.intel-detail{margin:10px 0;padding:12px 15px;background:var(--paper2);border:1px dashed var(--line2);border-radius:10px;font-size:12.5px;line-height:1.75;color:var(--muted);animation:viewIn .3s both}
+.intel-foot{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.intel-src{font-size:11.5px;color:var(--muted)}
+.intel-acts{display:flex;gap:6px;flex-wrap:wrap}
+.intel-empty{text-align:center;padding:40px 28px}
+.intel-empty .big{font-size:36px;display:block;margin-bottom:10px}
+.intel-empty h3{font-family:var(--serif);font-size:19px;margin-bottom:8px}
+.intel-empty p{color:var(--muted);font-size:13.5px;max-width:420px;margin:0 auto 16px}
+
+.tech-card{margin-bottom:16px}
+.tech-h{font-family:var(--serif);font-size:18px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tech-sub{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px}
+.tech-live{font-family:var(--sans);font-size:11.5px;font-weight:800;color:var(--green);background:var(--green-bg);border:1px solid var(--green-line);padding:3px 11px;border-radius:99px}
+.tech-svg{width:100%;height:auto;display:block;margin:6px 0}
+.tech-tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.tech-table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:560px}
+.tech-table th{background:var(--paper2);text-align:left;font-weight:800;padding:9px 12px;border-bottom:1.5px solid var(--line2);color:var(--ink);white-space:nowrap}
+.tech-table td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.tech-table tr:last-child td{border-bottom:none}
+.tech-table code{font-size:11.5px;background:var(--soft);color:var(--accent-deep);padding:1px 6px;border-radius:5px}
+.tech-signals{display:flex;gap:5px;flex-wrap:wrap}
+.tech-hit{color:var(--green);font-weight:800;white-space:nowrap}
+.tech-miss{color:var(--muted);white-space:nowrap}
+.tech-mini{min-width:0}
+.tech-code{background:var(--sea);color:#c9dccd;border-radius:12px;padding:16px 18px;font-family:'SFMono-Regular',Consolas,'Liberation Mono',monospace;font-size:12px;line-height:1.7;overflow-x:auto;margin:0 0 12px;white-space:pre}
+.tech-api{display:flex;flex-direction:column;gap:10px}
+.api-row{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;padding:11px 14px;background:var(--paper2);border:1px solid var(--line);border-radius:10px}
+.api-row code{font-size:12.5px;font-weight:700;color:var(--accent-deep)}
+.api-m{font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:6px;letter-spacing:.5px}
+.api-m.post{background:var(--green-bg);color:var(--green)}
+.api-m.get{background:var(--blue-bg);color:var(--blue)}
+.api-d{font-size:12.5px;color:var(--muted);flex:1;min-width:200px}
+.tech-list{margin:0;padding-left:2px;list-style:none;display:flex;flex-direction:column;gap:11px}
+.tech-list li{font-size:13px;line-height:1.7;padding-left:22px;position:relative;color:var(--ink)}
+.tech-list li::before{content:'⚓';position:absolute;left:0;top:0;font-size:12px}
+.tech-list code{font-size:11.5px;background:var(--soft);color:var(--accent-deep);padding:1px 6px;border-radius:5px}
+.tech-stack{display:flex;gap:8px;flex-wrap:wrap}
+.stack-chip{font-size:12px;font-weight:700;padding:6px 13px;border-radius:99px;background:var(--paper2);border:1px solid var(--line2);color:var(--ink)}
+.tech-road{display:flex;gap:12px;align-items:stretch;flex-wrap:wrap}
+.road-step{flex:1;min-width:200px;background:var(--paper2);border:1px solid var(--line);border-radius:12px;padding:16px}
+.road-step.done{background:var(--green-bg);border-color:var(--green-line)}
+.road-step .road-v{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--accent);padding:2px 10px;border-radius:99px;margin-bottom:8px}
+.road-step.done .road-v{background:var(--green)}
+.road-step b{font-family:var(--serif);font-size:15.5px;display:block;margin-bottom:6px}
+.road-step p{font-size:12.5px;color:var(--muted);line-height:1.7;margin:0}
+.road-arrow{align-self:center;font-size:20px;color:var(--line2);font-weight:800}
+
+/* ---------- responsive ---------- */
+@media(max-width:1080px){
+  .grid4,.picker-grid{grid-template-columns:1fr 1fr}
+  .dash-hero{grid-template-columns:1fr}
+  .ev-grid{grid-template-columns:1fr}
+  .tl-track{grid-template-columns:repeat(3,1fr);row-gap:22px}
+  .tl-track::before{display:none}
+}
+@media(max-width:900px){
+  #sidebar{position:fixed;left:0;top:0;transform:translateX(-102%);transition:transform .3s cubic-bezier(.2,.7,.3,1);box-shadow:16px 0 48px rgba(18,43,36,.3)}
+  #sidebar.open{transform:none}
+  #hamburger{display:grid;place-items:center}
+  #view{padding:22px 16px 56px}
+  #topbar{padding:0 16px}
+  .date-chip{display:none}
+}
+@media(max-width:640px){
+  .grid2,.grid3,.grid4,.picker-grid,.form-grid,.diag-actions,.calc-grid,.grid-2{grid-template-columns:1fr}
+  .tech-road{flex-direction:column}
+  .road-arrow{transform:rotate(90deg);align-self:center}
+  .intel-foot{flex-direction:column;align-items:flex-start}
+  .calc-grid .btn{width:100%}
+  .page-title{font-size:24px}
+  .tl-track{grid-template-columns:1fr 1fr}
+  .pair-row{flex-direction:column;gap:6px}
+  .pair-row .pr-names{flex:none}
+  .crumb .hide-sm{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<main id="account-gate" class="card">
+  <h1>我的大学航线</h1><p id="account-note" role="status">正在打开本机身份服务…</p>
+  <form id="account-form" hidden>
+    <div class="field"><label for="cc-name">账号</label><input id="cc-name" name="username" autocomplete="username" required maxlength="60"></div>
+    <div class="field"><label for="cc-pass">密码（至少 8 个字符）</label><input id="cc-pass" name="password" type="password" autocomplete="current-password" required minlength="8" maxlength="256"></div>
+    <button class="btn primary" type="submit" value="login">登录</button> <button class="btn" type="submit" value="register">创建本机账号</button>
+  </form>
+</main>
+<div id="vault-error" role="alert" hidden>浏览器未能保存最近的修改。请检查存储空间，再点 <button data-action="profile-retry">重试保存</button>。</div>
+<div id="app" hidden>
+  <aside id="sidebar">
+    <div class="brand">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <circle cx="20" cy="20" r="18" stroke="#8fd6b4" stroke-width="1.4"/>
+        <circle cx="20" cy="20" r="13.5" stroke="#8fd6b4" stroke-width=".7" stroke-dasharray="2 3" opacity=".7"/>
+        <path d="M20 4 L22.4 17.6 L36 20 L22.4 22.4 L20 36 L17.6 22.4 L4 20 L17.6 17.6 Z" fill="#8fd6b4" opacity=".9"/>
+        <circle cx="20" cy="20" r="3" fill="#122b24" stroke="#8fd6b4" stroke-width="1.2"/>
+      </svg>
+      <div>
+        <div class="brand-name">大学航线</div>
+        <div class="brand-sub">Course Compass</div>
+      </div>
+    </div>
+    <nav class="nav" id="nav" aria-label="模块导航">
+      <div class="nav-label">航 线 驾 驶 舱</div>
+      <button class="nav-item" data-action="nav" data-module="dash">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M9 2v3M9 13v3M2 9h3M13 9h3"/><circle cx="9" cy="9" r="1.6" fill="currentColor"/></svg>
+        海图首页<span class="n-badge" id="nav-radar-badge"></span>
+      </button>
+      <button class="nav-item" data-action="nav" data-module="profile">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2l1.8 4.2L15 8l-4.2 1.8L9 14l-1.8-4.2L3 8l4.2-1.8z"/></svg>
+        建立档案
+      </button>
+      <button class="nav-item" data-action="nav" data-module="paths">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 15c3-1 4-4 4-7M7 8c0-3 2-5 5-5M7 8c2 0 5 1 7 4"/><circle cx="3" cy="15" r="1.4" fill="currentColor"/><circle cx="12" cy="3" r="1.4" fill="currentColor"/><circle cx="14" cy="12" r="1.4" fill="currentColor"/></svg>
+        就业规划
+      </button>
+      <button class="nav-item" data-action="nav" data-module="diag">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12l3.5-4 3 2.5L13 5l3 3"/><circle cx="13" cy="5" r="1.5" fill="currentColor"/></svg>
+        就业诊断
+      </button>
+      <button class="nav-item" data-action="nav" data-module="intel">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="6.5"/><circle cx="9" cy="9" r="3"/><path d="M9 9l4.5-4.5"/><circle cx="9" cy="9" r=".8" fill="currentColor"/></svg>
+        定向情报<span class="n-badge" id="nav-intel-badge"></span>
+      </button>
+      <button class="nav-item" data-action="nav" data-module="evidence">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2v4M9 12v4M2 9h4M12 9h4M4.5 4.5l2 2M11.5 11.5l2 2M13.5 4.5l-2 2M6.5 11.5l-2 2"/></svg>
+        作业变证据
+      </button>
+      <button class="nav-item" data-action="nav" data-module="tech">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 5L2.5 9 6 13M12 5l3.5 4L12 13M10 3.5L8 14.5"/></svg>
+        引擎与技术
+      </button>
+    </nav>
+    <div class="side-profile" id="side-profile"></div>
+    <div class="side-foot">
+      <span id="account-label"></span> <button data-action="logout">退出账号</button>
+    </div>
+  </aside>
+
+  <div id="main">
+    <header id="topbar">
+      <button id="hamburger" data-action="toggle-sidebar" aria-label="打开导航">☰</button>
+      <div class="crumb"><span class="hide-sm">航线驾驶舱</span><span class="sep hide-sm">/</span><b id="crumb-title">海图首页</b></div>
+      <div class="top-right">
+        <span class="date-chip num" id="date-chip"></span>
+        <button id="radar-bell" data-action="radar-open" aria-label="信息雷达推送">
+          <svg width="19" height="19" viewBox="0 0 19 19" fill="none" stroke="#1f6a52" stroke-width="1.6"><path d="M9.5 2a5.5 5.5 0 0 1 5.5 5.5c0 4 1.5 5 1.5 5H2.5s1.5-1 1.5-5A5.5 5.5 0 0 1 9.5 2z"/><path d="M7.5 15.5a2 2 0 0 0 4 0"/></svg>
+          <span class="badge zero" id="bell-badge">0</span>
+        </button>
+      </div>
+    </header>
+    <main id="view" aria-live="polite"></main>
+  </div>
+</div>
+
+<div id="scrim" data-action="close-overlays"></div>
+<aside id="radar-drawer" aria-label="信息雷达">
+  <div class="rd-head">
+    <h3>📡 信息雷达</h3>
+    <button class="btn small" data-action="radar-read-all">全部已读</button>
+    <button class="btn small" data-action="radar-close" aria-label="关闭">✕</button>
+  </div>
+  <div class="rd-body" id="rd-body"></div>
+  <div class="rd-foot">每条信息附来源与可信等级：<b>A</b> 官方 · <b>B</b> 经验 · <b>C</b> 传闻。推送频率可随时关闭；所有日期以当年官方通知为准。</div>
+</aside>
+<dialog id="profile-history" aria-labelledby="history-title">
+  <h2 id="history-title">历史确认档案</h2>
+  <label class="field">选择确认记录<select id="history-version"></select></label>
+  <section id="confirmed-view" class="summary-box"></section>
+  <form method="dialog"><button class="btn">关闭</button></form>
+</dialog>
+<div id="toasts"></div>
+
+<script src="vault.js"></script>
+<script>
+'use strict';
+/* ================= 数据 ================= */
+const PATH_ORDER = ['jiuye'];
+const PATHS = {
+  jiuye:{letter:'聘',name:'就业',tone:'tone-blue',color:'#185fa5',bg:'#e6f1fb',
+    short:'暑期实习是秋招最大的筹码。',
+    window:'暑期实习 3–4 月投递 → 提前批 6 月下旬 → 秋招 8–10 月',
+    monday:'把最近一份课程作业改写成 3 条 bullet，本周内完成初稿。',
+    translate:'就业看"做过什么"：课程作业里的调研、数据、交付，都能写成项目经历。'}
+};
+const TIMELINE = {
+  jiuye:[
+    {t:'现在 · 2026 秋',e:'攒项目',d:'把课程作业升级成可展示的项目，这是你现在唯一能补的筹码。',s:'now'},
+    {t:'2027 · 3–4月',e:'暑期实习投递',d:'黄金窗口，转正率高，是秋招最大的筹码。',s:'hard',date:'2027-03-01'},
+    {t:'2027 · 6月下旬',e:'提前批',d:'门槛低、不占正式批名额、招满即止。',s:'',date:'2027-06-20'},
+    {t:'2027 · 8–9月',e:'秋招正式批',d:'9–10 月是黄金期，好岗位基本在这个窗口。',s:'',date:'2027-08-15'},
+    {t:'2027 · 10月',e:'笔面试高峰',d:'整理笔试安排、面试时间和岗位跟进记录。',s:'hard',date:'2027-10-10'},
+    {t:'2028 · 3–4月',e:'春招',d:'岗位量约为秋招的 1/3，只作兜底。',s:'',date:'2028-03-01'}]
+};
+const SCENARIOS = [
+  {id:'marketing',chip:'奶茶店推广 · 经管',kw:['营销','奶茶','推广','竞品','调研','渠道'],
+   text:'《市场营销》期末作业：给本地一家奶茶店做推广方案。4 人小组，我负责竞品调研和投放渠道选择。',
+   project:{name:'本地奶茶品牌竞品分析与渠道策略',skills:['市场调研','竞品分析','渠道策略','团队协作'],roles:'市场运营实习 / 品牌助理 / 本地生活运营'},
+   gaps:['补 3 家门店实地观察记录','记录 30 天团购销量变化并加一张趋势图','把方案给店主看，要到一句真实反馈'],
+   bullets:['设计问卷并走访 3 家门店完成竞品调研','对比 4 个投放渠道并给出预算分配建议','作为 4 人小组调研负责人按时交付方案'],
+   hidden:'市场运营实习的 JD 里常写明"有竞品分析经验优先"——你以为的"一次作业"，正好命中这条要求。多数学生不知道课程作业可以直接对标 JD 条款。'},
+  {id:'cs',chip:'图书管理系统 · 计算机',kw:['图书管理','课设','课程设计','java','管理系统','数据库'],
+   text:'我就做过一个课程设计，做了一个图书管理系统，这算项目经历吗？',
+   project:{name:'图书管理系统（全栈课程项目）',skills:['需求梳理','数据库建模','前后端联调','成品交付'],roles:'Java 后端实习 / 软件开发实习'},
+   gaps:['部署到云服务器，拿到一个可访问的地址','补 README 与演示截图，让别人能复现','加输入校验与异常测试，证明工程质量'],
+   bullets:['完成需求分析与 MySQL 数据库建模','实现前后端增删改查与联调测试','独立交付可演示的完整成品'],
+   hidden:'这个课设正好覆盖 Java 后端岗 JD 里"SSM 框架 + MySQL"5 条要求中的 3 条；缺的是部署上线——用一周补个云服务器地址即可。'},
+  {id:'teach',chip:'机构兼职 · 师范',kw:['讲课','家教','教育机构','兼职','教案','师范'],
+   text:'我在教育机构兼职讲过课，跟学校招聘要求的"教学能力"是一回事吗？',
+   project:{name:'教学实践经历（教育机构兼职）',skills:['教案设计','课堂授课','学生管理'],roles:'教师编制 / 民办学校 / 教研岗'},
+   gaps:['去机构开一份带课时的实践证明','留存 1 段课堂录像作为可核验材料','统计带过的学生数与独立设计的教案数'],
+   bullets:['在教育机构兼职授课（课时数以实践证明为准）','独立设计教案并完整交付课堂（数量待统计）','留存课堂记录，可应招聘方要求出示'],
+   hidden:'教师编很多地区 3 月就报名，且认"支教 / 实习经历"加分——你这段兼职可以折算。现在就去开一份带课时的实践证明，别等公告出了再跑。'}
+];
+const SKILL_DICT = [['调研','市场调研'],['问卷','市场调研'],['数据','数据分析'],['代码','编程实现'],['程序','编程实现'],['报告','文档写作'],['论文','学术写作'],['方案','方案策划'],['设计','方案设计'],['排版','内容运营'],['公众号','内容运营'],['展示','表达汇报'],['答辩','表达汇报'],['组织','组织协调'],['负责','项目负责']];
+const DEMO_PROFILE = {
+  school:'临江大学（双非）',major:'汉语言文学',grade:'大三',
+  rank:18,rankTotal:120,gpa:82,weeklyHours:8,intern:'暑假',
+  courses:[{name:'现代汉语',status:'已通过'},{name:'古代文学史',status:'已通过'},{name:'写作基础',status:'已通过'},{name:'市场营销（选修）',status:'在修'}],
+  achievements:[{type:'实习实践',title:'校公众号排版运营 1 年',desc:'负责栏目排版与发布，累计 40+ 篇'},{type:'课程作业',title:'《市场营销》期末小组作业',desc:'4 人小组，负责竞品调研与投放渠道选择'}],
+  saved:true
+};
+
+/* ================= 公开培养方案参考库 ================= */
+const COMMON_COURSES = [
+  {n:'思想道德与法治',cr:2,tm:'1-1'},{n:'中国近现代史纲要',cr:2,tm:'1-2'},
+  {n:'马克思主义基本原理',cr:3,tm:'2-1'},{n:'大学英语',cr:8,tm:'1-1起'},
+  {n:'体育',cr:4,tm:'1-1起'},{n:'大学生心理健康',cr:2,tm:'1-1'},{n:'计算机基础',cr:3,tm:'1-1'}
+];
+const CURRICULA = {
+  math:{label:'数学类',kw:['数学','统计','精算'],groups:[
+    {cat:'专业必修',courses:[{n:'数学分析',cr:6,tm:'1-1起'},{n:'高等代数',cr:5,tm:'1-1起'},{n:'解析几何',cr:3,tm:'1-1'},{n:'常微分方程',cr:4,tm:'2-1'},{n:'概率论',cr:4,tm:'2-1'},{n:'数理统计',cr:4,tm:'2-2'},{n:'实变函数',cr:4,tm:'3-1'},{n:'复变函数',cr:3,tm:'2-2'},{n:'近世代数',cr:4,tm:'3-1'},{n:'数值分析',cr:4,tm:'3-1'},{n:'数学建模',cr:3,tm:'2-2'},{n:'大学物理',cr:6,tm:'1-2起'}]},
+    {cat:'专业选修',courses:[{n:'拓扑学',cr:3,tm:'3-2'},{n:'泛函分析',cr:3,tm:'3-2'},{n:'微分几何',cr:3,tm:'3-2'},{n:'运筹学',cr:3,tm:'3-1'},{n:'离散数学',cr:3,tm:'2-2'},{n:'随机过程',cr:3,tm:'3-2'},{n:'偏微分方程',cr:3,tm:'3-2'},{n:'数学实验',cr:2,tm:'2-2'}]},
+    {cat:'实践环节',courses:[{n:'数学建模竞赛训练',cr:2,tm:'2-3'},{n:'专业实习',cr:4,tm:'3-3'},{n:'毕业论文',cr:8,tm:'4-2'}]}]},
+  cs:{label:'计算机类',kw:['计算机','软件','数据科学','人工智能','网络工程','信息安全','物联网'],groups:[
+    {cat:'专业必修',courses:[{n:'程序设计基础',cr:4,tm:'1-1'},{n:'数据结构',cr:4,tm:'2-1'},{n:'计算机组成原理',cr:4,tm:'2-2'},{n:'操作系统',cr:4,tm:'3-1'},{n:'计算机网络',cr:4,tm:'3-1'},{n:'数据库原理',cr:4,tm:'2-2'},{n:'离散数学',cr:4,tm:'1-2'},{n:'线性代数',cr:3,tm:'1-2'},{n:'概率论与数理统计',cr:4,tm:'2-1'},{n:'算法设计与分析',cr:3,tm:'3-1'},{n:'软件工程',cr:3,tm:'3-2'},{n:'大学物理',cr:5,tm:'1-2'}]},
+    {cat:'专业选修',courses:[{n:'编译原理',cr:3,tm:'3-2'},{n:'人工智能导论',cr:3,tm:'3-1'},{n:'Web前端开发',cr:3,tm:'2-2'},{n:'JavaEE企业级开发',cr:3,tm:'3-1'},{n:'机器学习',cr:3,tm:'3-2'},{n:'计算机视觉',cr:2,tm:'3-2'},{n:'网络安全',cr:2,tm:'3-1'},{n:'云计算与大数据',cr:2,tm:'3-2'}]},
+    {cat:'实践环节',courses:[{n:'课程设计',cr:2,tm:'2-3'},{n:'毕业实习',cr:4,tm:'3-3'},{n:'毕业设计',cr:8,tm:'4-2'}]}]},
+  chinese:{label:'中国语言文学类',kw:['汉语','中文','文学','汉语言'],groups:[
+    {cat:'专业必修',courses:[{n:'现代汉语',cr:4,tm:'1-1'},{n:'古代汉语',cr:4,tm:'2-1'},{n:'中国古代文学史',cr:6,tm:'1-2起'},{n:'中国现当代文学',cr:4,tm:'2-1'},{n:'外国文学',cr:4,tm:'2-2'},{n:'文学概论',cr:3,tm:'1-2'},{n:'语言学概论',cr:3,tm:'2-2'},{n:'写作',cr:3,tm:'1-1'},{n:'美学',cr:2,tm:'3-1'},{n:'中国古典文献学',cr:2,tm:'3-1'}]},
+    {cat:'专业选修',courses:[{n:'逻辑学',cr:2,tm:'2-1'},{n:'影视文学',cr:2,tm:'3-1'},{n:'比较文学',cr:2,tm:'3-2'},{n:'文字学',cr:2,tm:'3-1'},{n:'修辞学',cr:2,tm:'2-2'},{n:'新媒体写作',cr:2,tm:'3-1'},{n:'传播学概论',cr:2,tm:'2-2'},{n:'秘书学',cr:2,tm:'3-2'}]},
+    {cat:'实践环节',courses:[{n:'学年论文',cr:2,tm:'3-1'},{n:'毕业实习',cr:4,tm:'3-3'},{n:'毕业论文',cr:8,tm:'4-2'}]}]},
+  marketing:{label:'工商管理 / 经管类',kw:['营销','工商','管理','经济','金融','会计','市场','商务'],groups:[
+    {cat:'专业必修',courses:[{n:'管理学',cr:3,tm:'1-2'},{n:'微观经济学',cr:3,tm:'2-1'},{n:'宏观经济学',cr:3,tm:'2-2'},{n:'市场营销学',cr:3,tm:'2-1'},{n:'会计学',cr:3,tm:'1-2'},{n:'统计学',cr:3,tm:'2-2'},{n:'消费者行为学',cr:3,tm:'3-1'},{n:'市场调查与预测',cr:3,tm:'3-1'},{n:'财务管理',cr:3,tm:'3-1'},{n:'经济法',cr:2,tm:'2-2'}]},
+    {cat:'专业选修',courses:[{n:'品牌管理',cr:2,tm:'3-2'},{n:'渠道与零售管理',cr:2,tm:'3-2'},{n:'数字营销',cr:2,tm:'3-1'},{n:'广告学',cr:2,tm:'3-1'},{n:'国际市场营销',cr:2,tm:'3-2'},{n:'客户关系管理',cr:2,tm:'3-2'},{n:'电子商务',cr:2,tm:'2-2'},{n:'商务数据分析',cr:2,tm:'3-1'}]},
+    {cat:'实践环节',courses:[{n:'营销模拟实训',cr:2,tm:'2-3'},{n:'毕业实习',cr:4,tm:'3-3'},{n:'毕业论文',cr:6,tm:'4-2'}]}]},
+  english:{label:'外国语言文学类',kw:['英语','外语','翻译','日语','外国语'],groups:[
+    {cat:'专业必修',courses:[{n:'综合英语',cr:8,tm:'1-1起'},{n:'英语听力',cr:4,tm:'1-1起'},{n:'英语口语',cr:4,tm:'1-1起'},{n:'英语写作',cr:4,tm:'2-1'},{n:'高级英语',cr:4,tm:'3-1'},{n:'翻译理论与实践',cr:4,tm:'3-1'},{n:'语言学导论',cr:3,tm:'2-2'},{n:'英国文学',cr:3,tm:'3-1'},{n:'美国文学',cr:3,tm:'3-2'},{n:'跨文化交际',cr:2,tm:'2-2'}]},
+    {cat:'专业选修',courses:[{n:'第二外语',cr:4,tm:'2-1起'},{n:'商务英语',cr:2,tm:'3-1'},{n:'英语演讲与辩论',cr:2,tm:'2-2'},{n:'西方文明史',cr:2,tm:'3-1'},{n:'同声传译入门',cr:2,tm:'3-2'},{n:'英语教学法',cr:2,tm:'3-2'}]},
+    {cat:'实践环节',courses:[{n:'语言实习',cr:4,tm:'3-3'},{n:'毕业论文',cr:6,tm:'4-2'}]}]},
+  physics:{label:'物理学类',kw:['物理','光电','天文'],groups:[
+    {cat:'专业必修',courses:[{n:'力学',cr:4,tm:'1-1'},{n:'热学',cr:3,tm:'1-2'},{n:'电磁学',cr:4,tm:'2-1'},{n:'光学',cr:4,tm:'2-2'},{n:'原子物理',cr:3,tm:'2-2'},{n:'理论力学',cr:4,tm:'3-1'},{n:'电动力学',cr:4,tm:'3-1'},{n:'量子力学',cr:4,tm:'3-2'},{n:'热力学与统计物理',cr:4,tm:'3-2'},{n:'数学物理方法',cr:4,tm:'2-2'},{n:'固体物理',cr:3,tm:'3-2'}]},
+    {cat:'专业选修',courses:[{n:'计算物理',cr:3,tm:'3-1'},{n:'激光原理',cr:2,tm:'3-2'},{n:'半导体物理',cr:2,tm:'3-2'},{n:'天体物理导论',cr:2,tm:'3-1'},{n:'粒子物理导论',cr:2,tm:'3-2'}]},
+    {cat:'实践环节',courses:[{n:'普通物理实验',cr:4,tm:'1-2起'},{n:'近代物理实验',cr:3,tm:'3-1'},{n:'毕业论文',cr:8,tm:'4-2'}]}]},
+  material:{label:'材料 / 化学类',kw:['材料','化学','化工','高分子'],groups:[
+    {cat:'专业必修',courses:[{n:'材料科学基础',cr:4,tm:'2-1'},{n:'材料物理化学',cr:4,tm:'2-1'},{n:'材料力学性能',cr:3,tm:'2-2'},{n:'材料分析测试方法',cr:3,tm:'3-1'},{n:'金属学与热处理',cr:3,tm:'3-1'},{n:'高分子材料',cr:3,tm:'3-1'},{n:'无机非金属材料',cr:3,tm:'3-2'},{n:'复合材料',cr:3,tm:'3-2'},{n:'材料成型工艺',cr:3,tm:'3-1'}]},
+    {cat:'专业选修',courses:[{n:'纳米材料',cr:2,tm:'3-2'},{n:'功能材料',cr:2,tm:'3-2'},{n:'材料腐蚀与防护',cr:2,tm:'3-2'},{n:'半导体材料',cr:2,tm:'3-2'},{n:'材料计算与设计',cr:2,tm:'3-1'}]},
+    {cat:'实践环节',courses:[{n:'材料基础实验',cr:3,tm:'2-2起'},{n:'专业综合实验',cr:3,tm:'3-2'},{n:'毕业论文',cr:8,tm:'4-2'}]}]},
+  generic:{label:'通识与方法',kw:[],groups:[
+    {cat:'方法与工具',courses:[{n:'学术写作',cr:2,tm:'2-1'},{n:'文献检索与利用',cr:1,tm:'1-2'},{n:'数据分析基础',cr:3,tm:'2-2'},{n:'逻辑与批判性思维',cr:2,tm:'2-1'},{n:'项目管理入门',cr:2,tm:'3-1'},{n:'沟通与表达',cr:2,tm:'1-2'}]},
+    {cat:'实践环节',courses:[{n:'毕业实习',cr:4,tm:'3-3'},{n:'毕业论文',cr:6,tm:'4-2'}]}]}
+};
+function matchCurriculum(major){
+  const m = (major||'').toLowerCase();
+  for(const key of ['cs','math','chinese','english','physics','material','marketing']){
+    if(CURRICULA[key].kw.some(k=>m.includes(k))) return Object.assign({key},CURRICULA[key]);
+  }
+  return Object.assign({key:'generic'},CURRICULA.generic);
+}
+function getCurriculum(major){
+  const c = matchCurriculum(major);
+  return {key:c.key,label:c.label,matched:c.key!=='generic',
+    source:'参考：教育部专业教学质量国家标准与高校公开培养方案（演示聚合，以你校实际方案为准）',
+    groups:[{cat:'公共必修',courses:COMMON_COURSES},...c.groups]};
+}
+function allCurriculumCourses(major){
+  return getCurriculum(major).groups.flatMap(g=>g.courses.map(c=>Object.assign({cat:g.cat},c)));
+}
+function parsePlanText(text,major){
+  const known = allCurriculumCourses(major);
+  const lines = String(text).trim().split(/\r?\n/);
+  const splitCells = line=>line.split(/[,，;；、|\t]/).map(v=>v.trim().replace(/^"(.*)"$/,'$1').replace(/^《(.+)》$/,'$1'));
+  const headings = splitCells(lines[0]);
+  const nameColumn = headings.findIndex(v=>['课程','课程名','课程名称'].includes(v));
+  const tokens = nameColumn < 0 ? lines.flatMap(splitCells) : lines.slice(1).map(line=>splitCells(line)[nameColumn]);
+  const seen = new Set(), out = [];
+  for(const t of tokens){
+    if(!t || t.length>100 || !/[^\d\s.]/.test(t)) continue;
+    const key=courseKey(t);
+    if(seen.has(key)) continue;
+    seen.add(key);
+    const hit=known.find(k=>courseKey(k.n)===key);
+    out.push({n:t,cat:hit?hit.cat:'待核对课程',conf:hit?'hi':'mid'});
+  }
+  return out;
+}
+
+/* ================= 状态 ================= */
+const INTERN_WINDOWS = ['未确定','寒假','暑假','寒暑假均可'];
+function freshState(){
+  return {
+    module:'dash',confirmed:null,priorVersions:[],
+    profile:{school:'',major:'',grade:'',rank:null,rankTotal:null,gpa:null,weeklyHours:8,intern:'未确定',courses:[],achievements:[],saved:false},
+    paths:['jiuye'], profilePage:0, diagIndex:0,
+
+
+    radarDismissed:[],radarRead:false,weeklyDone:{},dashFilter:'all',
+    evScenario:0,evResult:null,evBusy:false,evTarget:null,evText:null,
+    courseMode:'recommend',courseReview:null,recSel:[],upSel:[],uploadResult:null,uploadBusy:false,
+    intel:{cat:'all',path:'all',lv:'all',q:'',sort:'score',savedOnly:false},
+    intelRead:[],intelDismissed:[],intelSaved:[],intelExpanded:null,intelUndo:null
+  };
+}
+const GRADES = ['大一','大二','大三','大四'];
+function profileNumber(field, raw){
+  if(raw == null || String(raw).trim() === '') return null;
+  const n = Number(raw);
+  if(field === 'gpa') return Number.isFinite(n) && n >= 0 && n <= 100 ? n : NaN;
+  return Number.isSafeInteger(n) && n > 0 ? n : NaN;
+}
+function newAchievementId(){
+  const bytes = crypto.getRandomValues(new Uint8Array(8));
+  return 'CG-'+Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
+}
+function prepareAchievements(records){
+  const seen = new Set();
+  for(const item of records){
+    if(!item.id || seen.has(item.id)) item.id=newAchievementId();
+    seen.add(item.id);
+    item.role ??= '';
+    item.materials ??= [];
+  }
+  return records;
+}
+function restoreProfile(stored){
+  const p = Object.assign(freshState().profile, stored);
+  for(const key of ['school','major']) p[key] = String(p[key] ?? '').trim();
+  if(!GRADES.includes(p.grade)) p.grade = '';
+  for(const key of ['gpa','rank','rankTotal']){
+    const n = profileNumber(key,p[key]);
+    p[key] = Number.isNaN(n) ? null : n;
+  }
+  if(p.rankTotal !== null && p.rank > p.rankTotal) p.rank = null;
+  p.weeklyHours=Number(p.weeklyHours);
+  if(!Number.isInteger(p.weeklyHours) || p.weeklyHours<0 || p.weeklyHours>40) p.weeklyHours=8;
+  if(!INTERN_WINDOWS.includes(p.intern)) p.intern='未确定';
+  p.achievements=prepareAchievements(p.achievements);
+  return p;
+}
+let state = freshState();
+function restoreState(stored){
+  state=Object.assign(freshState(),stored);
+  state.paths=['jiuye']; state.diagIndex=0;
+  if(state.module==='conflict') state.module='paths';
+  if(!RADAR_TYPES[state.dashFilter]) state.dashFilter='all';
+  state.intel.path='all';
+  if(!INTEL_RULES.some(rule=>rule.cat===state.intel.cat)) state.intel.cat='all';
+  // The original teaching example was number 5; other retired examples return to the first.
+  if(!state.employmentOnly) state.evScenario=state.evScenario===5?2:Math.min(state.evScenario,1);
+  state.employmentOnly=true;
+  state.profile=restoreProfile(state.profile);
+  state.profile.saved=false;
+  state.evBusy=false; state.evResult=null; state.uploadBusy=false;
+  if(!state.uploadResult?.source){state.uploadResult=null; state.upSel=[];}
+}
+function save(){ return vault.persist(); }
+function publishedProfile(){return state.confirmed?.profile ?? freshState().profile;}
+function profileStatus(){
+  if(!state.confirmed) return '草稿 · 尚未确认';
+  const same=JSON.stringify({...state.profile,saved:true})===JSON.stringify(state.confirmed.profile);
+  return same?'已确认 · 当前内容与确认版一致':'草稿有更新 · 等待再次确认';
+}
+function profileExport(){
+  const data={schemaVersion:2,account:vault.name(),exportedAt:new Date().toISOString(),draft:state.profile,
+    confirmed:state.confirmed,confirmationHistory:confirmedVersions(),paths:state.paths,weeklyDone:state.weeklyDone,pendingCourseReview:state.courseReview,
+    evidenceDraft:{achievementId:state.evTarget,text:state.evText},feedback:{read:state.intelRead,saved:state.intelSaved,dismissed:state.intelDismissed,radarRead:state.radarRead,radarDismissed:state.radarDismissed}};
+  const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  const link=document.createElement('a'); link.href=url; link.download='大学航线-本人档案-'+fmtDate(new Date())+'.json'; link.click(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function confirmedVersions(){
+  return state.confirmed ? [...state.priorVersions,state.confirmed] : [];
+}
+function versionLabel(snapshot,index){
+  return `版本 ${index+1} · ${new Date(snapshot.at).toLocaleString('zh-CN',{hour12:false})}`;
+}
+function showHistory(){
+  const versions=confirmedVersions();
+  const picker=$('#history-version');
+  picker.replaceChildren();
+  versions.forEach((snapshot,i)=>picker.prepend(new Option(versionLabel(snapshot,i)+(i===versions.length-1?'（当前确认版）':''),String(i))));
+  picker.parentElement.hidden=!versions.length;
+  picker.value=String(versions.length-1);
+  showHistoryVersion();
+  $('#profile-history').showModal();
+}
+function showHistoryVersion(){
+  const versions=confirmedVersions();
+  const i=Number($('#history-version').value);
+  const selected=versions[i];
+  const target=$('#confirmed-view');
+  if(!selected){target.textContent='暂无确认记录。完成「时间与确认」后，第一份档案会显示在这里。';return;}
+  const p=selected.profile;
+  target.innerHTML=`<h3>${esc(versionLabel(selected,i))}</h3>
+    <p>${esc(p.school||'学校未填')} · ${esc(p.major||'专业未填')} · ${esc(p.grade||'年级未填')}<br>
+    均分 ${p.gpa??'未填'} · 名次 ${p.rank??'未填'} / ${p.rankTotal??'未填'}<br>
+    每周 ${p.weeklyHours} 小时 · 实习窗口：${esc(p.intern)}</p>
+    <b>课程（${p.courses.length}）</b><ul>${p.courses.map(c=>`<li>${esc(c.name)} · ${esc(displayStatus(c.status))} · ${esc(courseOrigin(c))}</li>`).join('')}</ul>
+    <b>成果（${p.achievements.length}）</b><ul>${p.achievements.map(a=>`<li>${esc(a.title)} · ${esc(a.id)} · ${esc(a.type)}<br>${esc(a.desc)} ${esc(a.role)} ${a.materials.map(esc).join(' · ')}</li>`).join('')}</ul>`;
+}
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const TODAY = new Date();
+function daysTo(iso){ return Math.ceil((new Date(iso+'T00:00:00') - TODAY)/86400000); }
+function fmtDate(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function nextHard(key){
+  const nodes = TIMELINE[key].filter(n=>n.s==='hard'&&n.date&&daysTo(n.date)>0);
+  return nodes[0]||null;
+}
+function pct(p){ if(!p.rank||!p.rankTotal) return null; return p.rank/p.rankTotal; }
+function gradeLabel(p=publishedProfile()){ return p.grade||'年级未填'; }
+
+/* ================= 诊断计算 ================= */
+function feasibility(key){
+  const p = publishedProfile(), r = pct(p);
+  const n = p.achievements.length;
+  if(n>=2) return {label:'可行性 · 中高',detail:`已有 <b>${n} 段经历</b>可拆成可核验证据——一段公众号经历就能拆出 3 条能力证据。暑期实习是秋招最大的筹码。`};
+  if(n===1) return {label:'可行性 · 中',detail:'已有 1 段经历可拆证据；再补一段可展示的项目，暑期实习投递会从容很多。'};
+  return {label:'可行性 · 待积累',detail:'档案里还没有成果记录。从最近一份课程作业开始——「作业变证据」模块 30 秒就能拆出第一组证据。'};
+}
+function thresholdExtra(key){
+  const p = publishedProfile();
+  if(key==='jiuye'&&p.achievements.length){
+    return '你的成果：'+p.achievements.map(a=>esc(a.title)).join('、')+'。';
+  }
+  return '';
+}
+
+/* ================= 雷达 ================= */
+function radarItems(){
+  const items=[{id:'job-materials',type:'know',icon:'📎',title:'准备一份可展示的项目材料',
+    text:'从最近一次课程作业中选一个交付物，说明你负责的部分，并保存报告或作品链接。',
+    src:'就业准备建议',lv:'B',date:fmtDate(TODAY)},
+    {id:'job-week',type:'week',icon:'📌',title:'本周求职行动',text:PATHS.jiuye.monday,src:'就业行动模板',lv:'B',date:fmtDate(TODAY)}];
+  const upcoming=nextHard('jiuye');
+  if(upcoming) items.push({id:'job-date-'+upcoming.date,type:'days',icon:'⏳',title:upcoming.e,
+    text:`示例时间表：距 ${upcoming.date} 还有 ${daysTo(upcoming.date)} 天。实际日期请核对企业招聘公告。`,
+    src:'就业时间线示例',lv:'C',date:upcoming.date});
+  return items.filter(i=>!state.radarDismissed.includes(i.id));
+}
+const RADAR_TYPES = {all:'全部',know:'你可能不知道',days:'倒计时',week:'本周行动'};
+const RADAR_ICON_CLS = {know:'t-know',days:'t-days',gate:'t-gate',trap:'t-trap',week:'t-week'};
+function radarItemHTML(i,withDismiss){
+  return `<div class="radar-item">
+    <div class="ri-icon ${RADAR_ICON_CLS[i.type]}">${i.icon}</div>
+    <div class="ri-body">
+      <div class="ri-title">${esc(i.title)}</div>
+      <div class="ri-text">${esc(i.text)}</div>
+      <div class="ri-src"><span class="lv ${i.lv}">${i.lv} 级</span><span>${esc(i.src)}</span><span>· 核实 ${esc(i.date)}</span></div>
+    </div>
+    ${withDismiss?`<button class="ri-dismiss" data-action="radar-dismiss" data-id="${i.id}" aria-label="忽略这条">✕</button>`:''}
+  </div>`;
+}
+
+/* ================= 定向情报引擎 ================= */
+const INTEL_CATS = {
+  opp:{label:'机会',icon:'🧭',cls:'t-know'},
+  gate:{label:'门槛',icon:'🎯',cls:'t-gate'},
+  deadline:{label:'截止',icon:'⏳',cls:'t-days'},
+  conflict:{label:'冲突',icon:'⚠️',cls:'t-days'},
+  evidence:{label:'成果',icon:'⚓',cls:'t-week'},
+  gap:{label:'缺口',icon:'🧩',cls:'t-gate'},
+  budget:{label:'时间',icon:'⏱️',cls:'t-trap'},
+  trap:{label:'避坑',icon:'🕳️',cls:'t-trap'},
+  action:{label:'行动',icon:'📌',cls:'t-week'}
+};
+const INTEL_RULES = [
+  {id:'summer intern',cat:'deadline',label:'暑期实习投递窗口',signals:['路径·就业','成果数'],
+   fn:(p,ps)=>{ if(!ps.includes('jiuye')) return null; const d=daysTo('2027-03-01');
+     return {paths:['jiuye'],title:`还剩 ${d} 天：暑期实习集中投递`,
+       body:`2027 年 3–4 月是暑期实习黄金窗口、转正率高。你已有 ${p.achievements.length} 段经历可作筹码——现在攒的项目就是那时的弹药。`,
+       why:['路径·就业',`成果 ${p.achievements.length} 段`],src:'公开招聘日历聚合',lv:'B',date:'2026-11-01',deadline:'2027-03-01',
+       detail:'暑期实习转正是秋招最大筹码；投递窗口早于秋招半年，多数学生知道秋招却不知道暑期实习。'}; }},
+  {id:'evidence translate',cat:'evidence',label:'已有成果 → 证据翻译',signals:['成果记录'],
+   fn:(p,ps)=>{ if(!p.achievements.length) return null; const a=p.achievements[0];
+     return {paths:[],title:`你的《${a.title}》能拆成 3 条可核验证据`,
+       body:'你以为的"一次作业 / 一段兼职"，按"角色 + 动作 + 可核验结果"拆解就是项目经历。去「作业变证据」30 秒生成。',
+       why:[`成果·${a.title}`],src:'成果—技能映射引擎',lv:'A',date:fmtDate(TODAY),deadline:null,
+       detail:'写进简历前，核对个人分工、交付物和能提供的材料。'}; }},
+  {id:'course gap',cat:'gap',label:'课程—岗位缺口',signals:['已修课程','路径·就业'],
+   fn:(p,ps)=>{ if(!ps.includes('jiuye')) return null;
+     const hasDB=p.courses.some(c=>/数据库|SQL|数据管理/i.test(c.name));
+     return hasDB
+       ? {paths:['jiuye'],title:'你已修数据库 → 把作业升级成带 API 的项目',
+          body:'后端 / 数据岗 JD 常要求 SQL。你课表里已有数据库类课程——下一步不是再上课，而是把课程作业升级成带查询接口与测试的可展示项目。',
+          why:['已修·数据库类','路径·就业'],src:'课程—技能—岗位图',lv:'B',date:fmtDate(TODAY),deadline:null,
+          detail:'已有课程只证明"学过"，产物才证明"会做"；缺口分析区分未学 / 学过未证明 / 已有证据。'}
+       : {paths:['jiuye'],title:'缺口：后端 / 数据岗常要求 SQL，你课表里没有',
+          body:'你的已修列表中没有数据库类课程，而多数后端 / 数据实习 JD 写明 SQL。建议补一门并留下可核验产物，或先用现有作业补齐证据。',
+          why:['已修课程扫描','路径·就业'],src:'课程—技能—岗位图',lv:'B',date:fmtDate(TODAY),deadline:null,
+          detail:'从目标 JD 反推技能缺口，再映射到本校课程；不现场发明课程关系。'}; }},
+  {id:'monday action',cat:'action',label:'本周一件事',signals:['首选路径'],
+   fn:(p,ps)=>{ if(!ps.length) return null; const k=ps[0];
+     return {paths:[k],title:'本周一件事 · '+PATHS[k].name,body:PATHS[k].monday,
+       why:['路径·'+PATHS[k].name],src:'按档案与路径生成',lv:'A',date:fmtDate(TODAY),deadline:null,
+       detail:'把长期规划落到一个本周可完成的具体动作，形成"有人管你"的追踪闭环。'}; }},
+  {id:'xuandiao',cat:'opp',label:'选调 / 教师编隐性门槛',signals:['专业','路径·就业'],
+   fn:(p,ps)=>{ if(!ps.includes('jiuye')) return null; if(!/汉语|中文|师范|教育|文学/.test(p.major)) return null;
+     return {paths:['jiuye'],title:'你不知道的：选调生 / 教师编的隐性门槛',
+       body:'选调生报名常要"学生干部或校级以上荣誉"；教师编很多地区 3 月就报名、认支教 / 实习经历加分。你的助管 / 兼职经历可折算——现在去开一份任职 / 课时证明。',
+       why:['专业·'+p.major,'路径·就业'],src:'公开招考公告聚合',lv:'B',date:'2026-10-08',deadline:null,
+       detail:'这类门槛写在公告附件里，学生不会主动翻；证明开具需要时间，必须提前。'}; }},
+  {id:'intern match',cat:'opp',label:'可实习时间匹配',signals:['可实习时间','路径·就业'],
+   fn:(p,ps)=>{ if(!ps.includes('jiuye')||p.intern==='未确定') return null;
+     return {paths:['jiuye'],title:`你可实习：${p.intern} → 对应窗口已锁定`,
+       body:`按你的可实习时间（${p.intern}），优先匹配${p.intern.includes('暑')?'暑期实习（3–4 月投递）':'寒假实习（11–12 月投递）'}；投递时把这段可用时间写进简历与沟通话术。`,
+       why:['可实习·'+p.intern,'路径·就业'],src:'岗位资格规则',lv:'B',date:fmtDate(TODAY),deadline:null,
+       detail:'到岗时间与实习天数是硬资格；提前确认可避免投了才发现时间不符。'}; }}
+];
+function buildIntel(){
+  const p = publishedProfile(), ps = state.paths;
+  const items = [];
+  INTEL_RULES.forEach(rule=>{
+    let it = null;
+    try{ it = rule.fn(p,ps); }catch(e){ it = null; }
+    if(!it) return;
+    const catW = {conflict:10,gate:8,deadline:6,opp:6,evidence:4,gap:4,budget:2,action:2,trap:0}[rule.cat]||0;
+    let score = 50 + catW + it.why.length*6;
+    if(it.paths.some(k=>ps.includes(k))) score += 30;
+    if(it.deadline){ const d=daysTo(it.deadline); if(d>0) score += Math.max(0,40-d/8); }
+    if(state.intelRead.includes(rule.id)) score -= 8;
+    items.push(Object.assign({id:rule.id,cat:rule.cat,ruleLabel:rule.label,score:Math.round(score)},it));
+  });
+  return items;
+}
+function intelVisible(){
+  const f = state.intel;
+  let list = buildIntel().filter(i=>!state.intelDismissed.includes(i.id));
+  if(f.savedOnly) list = list.filter(i=>state.intelSaved.includes(i.id));
+  if(f.cat!=='all') list = list.filter(i=>i.cat===f.cat);
+  if(f.path!=='all') list = list.filter(i=>i.paths.includes(f.path));
+  if(f.lv!=='all') list = list.filter(i=>i.lv===f.lv);
+  if(f.q.trim()){ const q=f.q.trim().toLowerCase(); list = list.filter(i=>(i.title+i.body+i.why.join('')).toLowerCase().includes(q)); }
+  if(f.sort==='score') list.sort((a,b)=>b.score-a.score);
+  else if(f.sort==='deadline') list.sort((a,b)=>{ const da=a.deadline?daysTo(a.deadline):9999, db=b.deadline?daysTo(b.deadline):9999; return da-db; });
+  else list.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  return list;
+}
+
+/* ================= 模块：引擎与技术 ================= */
+function techPipelineSVG(){
+  const boxes = [
+    {x:20,w:120,t:'公开数据源',s:'官网 / 研招网 / 招考公告',c:'#5f5e5a'},
+    {x:160,w:120,t:'采集 · OCR',s:'定时抓取 + 培养方案解析',c:'#185fa5'},
+    {x:300,w:120,t:'结构化政策库',s:'字段化 + 来源分级 A/B/C',c:'#534ab7'},
+    {x:440,w:130,t:'画像匹配引擎',s:'规则 v0 → 小模型 v2',c:'#0f6e56'},
+    {x:590,w:120,t:'排序 · 去重',s:'匹配分 + 时效 + 已读衰减',c:'#9b4c2d'},
+    {x:730,w:120,t:'推送触发',s:'建档 / 周一 / 倒计时',c:'#a5382a'},
+    {x:870,w:110,t:'反馈闭环',s:'已读 / 收藏 / 忽略 → 重排',c:'#3b6d11'}
+  ];
+  let s = `<svg viewBox="0 0 1000 300" class="tech-svg" role="img" aria-label="定向情报数据流水线">`;
+  s += `<defs><marker id="tar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8a7a52"/></marker></defs>`;
+  boxes.forEach((b,i)=>{
+    s += `<rect x="${b.x}" y="60" width="${b.w}" height="74" rx="10" fill="#fffdf6" stroke="${b.c}" stroke-width="1.6"/>`;
+    s += `<rect x="${b.x}" y="60" width="${b.w}" height="6" rx="3" fill="${b.c}"/>`;
+    s += `<text x="${b.x+b.w/2}" y="92" text-anchor="middle" font-size="13" font-weight="700" fill="#2c2c2a" font-family="Manrope,'Noto Sans SC',sans-serif">${b.t}</text>`;
+    s += `<text x="${b.x+b.w/2}" y="112" text-anchor="middle" font-size="9.5" fill="#5f5e5a" font-family="Manrope,'Noto Sans SC',sans-serif">${b.s}</text>`;
+    if(i<boxes.length-1){ const nx=boxes[i+1].x; s += `<line x1="${b.x+b.w}" y1="97" x2="${nx-4}" y2="97" stroke="#8a7a52" stroke-width="1.6" marker-end="url(#tar)"/>`; }
+  });
+  // profile store feeding engine
+  s += `<rect x="430" y="196" width="150" height="66" rx="10" fill="#eef5ef" stroke="#0f6e56" stroke-width="1.6" stroke-dasharray="5 3"/>`;
+  s += `<text x="505" y="222" text-anchor="middle" font-size="12" font-weight="700" fill="#0f6e56" font-family="Manrope,'Noto Sans SC',sans-serif">个人画像库</text>`;
+  s += `<text x="505" y="240" text-anchor="middle" font-size="9.5" fill="#5f5e5a" font-family="Manrope,'Noto Sans SC',sans-serif">PostgreSQL · 行级隔离 RLS</text>`;
+  s += `<line x1="505" y1="196" x2="505" y2="138" stroke="#0f6e56" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#tar)"/>`;
+  // feedback loop back
+  s += `<path d="M 925 134 L 925 280 L 505 280 L 505 266" fill="none" stroke="#3b6d11" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#tar)"/>`;
+  s += `<text x="715" y="294" text-anchor="middle" font-size="9.5" fill="#3b6d11" font-family="Manrope,'Noto Sans SC',sans-serif">反馈信号回流，驱动下一轮重排</text>`;
+  s += `</svg>`;
+  return s;
+}
+function renderTech(){
+  const p = publishedProfile(), ps = state.paths;
+  const activeRules = INTEL_RULES.filter(r=>{ try{return !!r.fn(p,ps);}catch(e){return false;} }).length;
+  const ruleRows = INTEL_RULES.map(r=>{
+    let hit=false; try{hit=!!r.fn(p,ps);}catch(e){}
+    const c=INTEL_CATS[r.cat];
+    return `<tr><td><code>${r.id}</code></td><td><span class="tag tag-sm" style="background:var(--sea-soft);color:var(--sea)">${c.icon} ${c.label}</span></td><td>${r.label}</td><td class="tech-signals">${r.signals.map(s=>`<span class="why-chip">${s}</span>`).join('')}</td><td>${hit?'<span class="tech-hit">✓ 命中</span>':'<span class="tech-miss">— 未触发</span>'}</td></tr>`;
+  }).join('');
+  return `<div class="kicker">引擎与技术 · Tech</div>
+    <h1 class="page-title">定向情报背后，<em>是怎样跑起来的。</em></h1>
+    <p class="page-sub">数据流、规则、评分与接口契约。前端原型以<b>规则引擎 v0</b> 真实跑通（可解释、零模型依赖）；下方为生产架构与演进路线。</p>
+
+    <div class="card tech-card">
+      <h3 class="tech-h">① 数据流水线</h3>
+      <p class="tech-sub">公开信息 → 结构化 → 画像匹配 → 排序推送 → 反馈回流。个人画像与公开政策库物理隔离，匹配在服务端完成。</p>
+      ${techPipelineSVG()}
+    </div>
+
+    <div class="card tech-card">
+      <h3 class="tech-h">② 规则引擎 · 实时状态 <span class="tech-live">当前档案命中 ${activeRules} / ${INTEL_RULES.length} 条</span></h3>
+      <p class="tech-sub">每条规则声明它读取的画像信号（signals）与触发条件。下表按你<b>当前</b>档案与路径实时计算命中情况——改档案，这里立刻变。</p>
+      <div class="tech-tablewrap"><table class="tech-table">
+        <thead><tr><th>规则 ID</th><th>类别</th><th>名称</th><th>读取信号</th><th>当前状态</th></tr></thead>
+        <tbody>${ruleRows}</tbody>
+      </table></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card tech-card">
+        <h3 class="tech-h">③ 个性化评分公式</h3>
+        <pre class="tech-code">score = 50                      // 基础分
+      + catWeight               // 类别权重(冲突10/门槛8/截止6…)
+      + why.length * 6          // 命中画像信号越多越相关
+      + (路径匹配 ? 30 : 0)      // 命中已选路径强加权
+      + max(0, 40 - days/8)     // 截止越近越紧急
+      - (已读 ? 8 : 0)           // 已读衰减，避免重复打扰</pre>
+        <p class="tech-sub">排序可选：匹配分 / 截止临近 / 最新发布。收藏与忽略作为显式反馈进入下一轮重排。</p>
+      </div>
+      <div class="card tech-card">
+        <h3 class="tech-h">④ 推送触发器</h3>
+        <table class="tech-table tech-mini">
+          <thead><tr><th>触发</th><th>时机</th><th>内容</th></tr></thead>
+          <tbody>
+            <tr><td>建档完成</td><td>即时</td><td>首批定向情报 + 门槛诊断</td></tr>
+            <tr><td>每周巡航</td><td>周一 08:00</td><td>本周情报 + 一件事</td></tr>
+            <tr><td>硬日期</td><td>前 30 / 7 / 1 天</td><td>倒计时升级提醒</td></tr>
+            <tr><td>政策更新</td><td>事件驱动</td><td>命中画像的政策变更</td></tr>
+            <tr><td>反馈回流</td><td>收藏 / 忽略后</td><td>同类重排 / 降权</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card tech-card">
+      <h3 class="tech-h">⑤ 数据 Schema（核心三表）</h3>
+      <div class="grid-2">
+        <pre class="tech-code">profile {
+  user_id      uuid  PK
+  school, major, grade
+  rank, rank_total, gpa
+  weekly_hours, intern_window
+  courses[]    {name, credit, term}
+  achievements[] {title, role, result}
+  paths[]      enum
+  updated_at   timestamptz
+}  -- RLS: user_id = auth.uid()</pre>
+        <pre class="tech-code">intel_item {
+  id           text
+  cat          enum(opp/gate/deadline/…)
+  paths[]      enum
+  title, body, detail
+  why[]        text   -- 可解释信号
+  score        int
+  source_id    fk → policy_source
+  level        enum(A/B/C)
+  published_at, deadline
+}
+policy_source {
+  id, url, title, publisher
+  level, fetched_at, hash
+  fields       jsonb  -- 结构化政策
+}</pre>
+      </div>
+    </div>
+
+    <div class="card tech-card">
+      <h3 class="tech-h">⑥ API 契约</h3>
+      <div class="tech-api">
+        <div class="api-row"><span class="api-m post">POST</span><code>/api/intel/feed</code><span class="api-d">入参 profile + paths + filters；返回排序后的 intel_item[]（含 why 与 score）。</span></div>
+        <div class="api-row"><span class="api-m post">POST</span><code>/api/intel/feedback</code><span class="api-d">{item_id, action: read|save|dismiss}；写入反馈表，驱动重排与降权。</span></div>
+        <div class="api-row"><span class="api-m post">POST</span><code>/api/intel/rerank</code><span class="api-d"><span class="tag tag-sm tag-neutral">预留 · 小模型</span> 对候选集做语义重排与摘要，v2 启用。</span></div>
+        <div class="api-row"><span class="api-m post">POST</span><code>/api/evidence/analyze</code><span class="api-d"><span class="tag tag-sm tag-neutral">预留 · 小模型</span> 作业文本 → 证据 bullets，替换规则兜底。</span></div>
+        <div class="api-row"><span class="api-m get">GET</span><code>/api/policy/sources?major=&path=</code><span class="api-d">公开政策库检索（v1），按专业 / 路径过滤，返回分级来源。</span></div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card tech-card">
+        <h3 class="tech-h">⑦ 隐私与合规</h3>
+        <ul class="tech-list">
+          <li><b>本人访问</b>：当前版本使用本机账号会话解锁各自的浏览器加密档案。</li>
+          <li><b>最小化采集</b>：只收诊断必需字段；不爬教务系统、不存身份证 / 成绩原件。</li>
+          <li><b>可删除</b>：一键清空档案与反馈，级联删除派生情报。</li>
+          <li><b>来源分级</b>：A 官方 / B 聚合 / C 待核，C 级不进推送、只作线索。</li>
+          <li><b>不承诺录取</b>：所有门槛为参考口径，标注「以当年官方办法为准」。</li>
+        </ul>
+      </div>
+      <div class="card tech-card">
+        <h3 class="tech-h">⑧ 技术栈</h3>
+        <div class="tech-stack">
+          <span class="stack-chip">前端 · React + TypeScript</span>
+          <span class="stack-chip">原型 · 单文件 Vanilla（当前）</span>
+          <span class="stack-chip">后端 · FastAPI (Python)</span>
+          <span class="stack-chip">存储 · PostgreSQL + RLS</span>
+          <span class="stack-chip">文件 · 对象存储 (培养方案)</span>
+          <span class="stack-chip">检索 · LangGraph + RAG (v1)</span>
+          <span class="stack-chip">重排 · 小模型 (v2)</span>
+          <span class="stack-chip">排程 · OR-Tools (时间约束)</span>
+          <span class="stack-chip">图谱 · Cytoscape (课程—技能—岗位)</span>
+          <span class="stack-chip">任务 · Celery / 定时采集</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card tech-card">
+      <h3 class="tech-h">⑨ 演进路线</h3>
+      <div class="tech-road">
+        <div class="road-step done"><span class="road-v">v0</span><b>规则引擎</b><p>可解释规则 + 画像匹配 + 评分排序。当前原型已跑通，零模型依赖。</p></div>
+        <div class="road-arrow">→</div>
+        <div class="road-step"><span class="road-v">v1</span><b>政策库检索</b><p>结构化公开政策库 + RAG 检索，按专业 / 路径召回，来源分级与时效校验。</p></div>
+        <div class="road-arrow">→</div>
+        <div class="road-step"><span class="road-v">v2</span><b>小模型重排</b><p>语义重排 + 摘要 + 证据生成，反馈闭环在线学习；接口已预留。</p></div>
+      </div>
+    </div>`;
+}
+
+/* ================= 通用渲染 ================= */
+const MODULE_TITLES = {dash:'海图首页',profile:'建立档案',paths:'就业规划',diag:'就业诊断',intel:'定向情报',evidence:'作业变证据',tech:'引擎与技术'};
+function toast(msg,type,action){
+  const t = document.createElement('div');
+  t.className = 'toast '+(type||'ok');
+  const span = document.createElement('span');
+  span.textContent = msg;
+  t.appendChild(span);
+  if(action){
+    const b = document.createElement('button');
+    b.className = 'toast-act';
+    b.textContent = action.label;
+    b.addEventListener('click',()=>{ action.fn(); t.remove(); });
+    t.appendChild(b);
+  }
+  $('#toasts').appendChild(t);
+  setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),320);},action?5000:2600);
+}
+function renderChrome(){
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.module===state.module));
+  $('#crumb-title').textContent = MODULE_TITLES[state.module];
+  $('#date-chip').textContent = fmtDate(TODAY)+' · '+gradeLabel();
+  const unread = state.radarRead?0:radarItems().length;
+  const badge = $('#bell-badge');
+  badge.textContent = unread;
+  badge.classList.toggle('zero',unread===0);
+  $('#nav-radar-badge').textContent = unread||'';
+  const ib = $('#nav-intel-badge');
+  if(ib){
+    let n = 0;
+    if(state.confirmed && state.paths.length){
+      n = buildIntel().filter(i=>!state.intelRead.includes(i.id)&&!state.intelDismissed.includes(i.id)).length;
+    }
+    ib.textContent = n||'';
+    ib.classList.toggle('zero',n===0);
+  }
+  const p = publishedProfile();
+  const dots = PATH_ORDER.map(k=>{
+    const on = state.paths.includes(k);
+    return `<span class="sp-dot ${on?'on':''}" style="${on?'background:'+PATHS[k].color:''}" title="${PATHS[k].name}"></span>`;
+  }).join('');
+  $('#side-profile').innerHTML = p.saved
+    ? `<div class="sp-name">${esc(p.school||'未命名院校')}</div>
+       <div class="sp-meta">${esc(p.major||'未填专业')} · ${esc(gradeLabel())}${p.rank&&p.rankTotal?` · 排名 ${p.rank}/${p.rankTotal}`:''}</div>
+       <div class="sp-dots">${dots}</div>`
+    : `<div class="sp-name">档案未建立</div><div class="sp-meta">先建档，诊断才知道你是谁。</div>
+       <button class="btn small primary" style="margin-top:9px;width:100%" data-action="nav" data-module="profile">去建立档案 →</button>`;
+}
+function render(){
+  renderChrome();
+  const v = $('#view');
+  v.innerHTML = '<div class="view-enter">'+({dash:renderDash,profile:renderProfile,paths:renderPaths,diag:renderDiag,intel:renderIntel,evidence:renderEvidence,tech:renderTech}[state.module])()+'</div>';
+  save();
+}
+function pagerHTML(pages,cur,prevAction,nextAction,nextLabel){
+  return `<div class="pager">
+    <div class="dots">${pages.map((label,i)=>`<span class="pdot ${i<cur?'done':''} ${i===cur?'cur':''}"><i>${i<cur?'✓':i+1}</i>${label}</span>`).join('')}</div>
+    <div class="pbtns">
+      <button class="btn" data-action="${prevAction}" ${cur===0?'disabled':''}>← 上一步</button>
+      <button class="btn primary" data-action="${nextAction}">${nextLabel||'下一步 →'}</button>
+    </div>
+  </div>`;
+}
+
+/* ================= 模块：海图首页 ================= */
+function renderDash(){
+  const p = publishedProfile();
+  const upcoming=nextHard('jiuye');
+  const items = radarItems();
+  const filtered = state.dashFilter==='all'?items:items.filter(i=>i.type===state.dashFilter);
+  const weekTask=PATHS.jiuye.monday, weekDone=state.weeklyDone.jiuye;
+  return `
+  <div class="kicker">Chart Room · 海图首页</div>
+  <h1 class="page-title">我的<em>就业准备</em></h1>
+  <p class="page-sub">查看求职材料、本周行动和下一次实习或校招窗口。</p>
+  <div class="dash-hero">
+    <div class="hero-card">
+      <div class="kicker">我的起点</div>
+      ${p.saved?`
+        <h2>${esc(p.school)} · ${esc(p.major)}</h2>
+        <p style="font-size:13.5px;color:#cfe6d6;position:relative">${esc(gradeLabel())}${p.rank&&p.rankTotal?` · 排名 ${p.rank}/${p.rankTotal}（前 ${(pct(p)*100).toFixed(1)}%）`:''}${p.gpa!=null?` · 均分 ${p.gpa}`:''} · 每周可投入 ${p.weeklyHours} 小时</p>
+        <div class="hero-meta">
+          <span class="hero-chip">已修 ${p.courses.length} 门</span>
+          <span class="hero-chip">成果 ${p.achievements.length} 段</span>
+        </div>
+        <button class="btn primary" data-action="nav" data-module="diag">查看我的就业诊断 →</button>
+      `:`
+        <h2>先知道你在哪，才能谈去哪。</h2>
+        <p style="font-size:13.5px;color:#cfe6d6;position:relative">建立个人档案：学校、专业、排名、已修课程与已有成果。不爬教务、不收身份证，未知信息可以留空。</p>
+        <button class="btn primary" data-action="nav" data-module="profile">从建立档案开始 →</button>
+        <button class="btn" style="margin-left:8px" data-action="demo-fill">先用演示档案体验</button>
+      `}
+    </div>
+    <div class="week-card">
+      <div class="label">📌 本周求职行动</div>
+      <div class="week-task ${weekDone?'muted':''}" style="${weekDone?'text-decoration:line-through':''}">${esc(weekTask)}</div>
+      <label class="week-check ${weekDone?'done':''}"><input type="checkbox" data-action="week-done" data-path="jiuye" ${weekDone?'checked':''}>标记本周行动已完成</label>
+    </div>
+  </div>
+  <div class="label" style="margin:22px 0 10px">招聘时间线</div>
+  <div class="card"><h3>${upcoming?esc(upcoming.e):'暂无后续招聘节点'}</h3>
+    <p>${upcoming?`示例日期 ${esc(upcoming.date)} · 还有 ${daysTo(upcoming.date)} 天`:''}</p>
+    <button class="btn" data-action="nav" data-module="paths">查看就业规划 →</button></div>
+  <div style="display:flex;align-items:center;gap:12px;margin:26px 0 12px;flex-wrap:wrap">
+    <div class="label" style="margin:0">就业信息雷达</div>
+    <button class="btn small" data-action="radar-open" style="margin-left:auto">查看全部推送</button>
+  </div>
+  <div class="filter-row">${Object.entries(RADAR_TYPES).map(([k,v])=>`<button class="fchip ${state.dashFilter===k?'on':''}" data-action="dash-filter" data-f="${k}">${v}</button>`).join('')}</div>
+  <div class="radar-feed stagger">${filtered.length?filtered.map(i=>radarItemHTML(i,true)).join(''):'<div class="empty"><div class="big">🌊</div><h3>这一类暂时没有推送</h3><p>换个分类看看，或等下周一的例行推送。</p></div>'}</div>
+  <div class="statement">你没法搜索一个你根本不知道存在的东西。<em>雷达替你把问题送上门。</em></div>
+  <p class="footnote">推送样例为合成场景，每条附来源与可信等级（A 官方 / B 经验 / C 传闻）；倒计时按 2028 届口径（当前大三上）计算，正式使用以当年官方通知为准。</p>`;
+}
+
+/* ================= 模块：建立档案 ================= */
+const PROFILE_PAGES = ['基本信息','已修课程','已有成果','时间与确认'];
+function renderProfile(){
+  const p = state.profile, pg = state.profilePage;
+  let body = '';
+  if(pg===0){
+    body = `<div class="card" id="basic-profile">
+      <div class="label">第 1 页 · 基本信息</div>
+      <p class="hint">各项均可留空。有效信息自动保存在当前浏览器，清除本站数据后需重新填写。</p>
+      <div class="form-grid">
+        <div class="field"><label for="basic-school">学校</label><input id="basic-school" data-field="school" value="${esc(p.school)}" placeholder="如：临江大学"></div>
+        <div class="field"><label for="basic-major">专业</label><input id="basic-major" data-field="major" value="${esc(p.major)}" placeholder="如：汉语言文学"></div>
+        <div class="field"><label for="basic-grade">年级</label><select id="basic-grade" data-field="grade"><option value="">未填写</option>${GRADES.map(g=>`<option ${p.grade===g?'selected':''}>${g}</option>`).join('')}</select></div>
+        ${[['gpa','均分（百分制）','min="0" max="100" step="any"','82.5'],['rank','专业排名','min="1" step="1"','18'],['rankTotal','专业总人数','min="1" step="1"','120']].map(([key,label,limits,example])=>`
+          <div class="field"><label for="basic-${key}">${label}</label><input id="basic-${key}" type="number" ${limits} data-field="${key}" value="${p[key]??''}" placeholder="如：${example}" aria-describedby="error-${key}"><span class="field-error" id="error-${key}" aria-live="polite"></span></div>`).join('')}
+      </div>
+      <div class="pct-preview" id="pct-preview" aria-live="polite">${rankPreview(p)}</div>
+      <p id="basic-storage-error" role="status" hidden>浏览器未能保存档案。刷新后本次修改可能丢失。</p>
+    </div>`;
+  }else if(pg===1){
+    const mode = state.courseMode;
+    body = `<div class="card">
+      <div class="label">第 2 页 · 已修 / 在修课程</div>
+      ${state.courseReview ? renderCourseReview() : `
+      <div class="seg" role="tablist">
+        <button class="${mode==='upload'?'on':''}" data-action="course-mode" data-mode="upload">📄 上传培养方案</button>
+        <button class="${mode==='recommend'?'on':''}" data-action="course-mode" data-mode="recommend">🎓 按专业推荐</button>
+        <button class="${mode==='manual'?'on':''}" data-action="course-mode" data-mode="manual">✍️ 手动添加</button>
+      </div>
+      ${mode==='upload'?renderUploadPanel():mode==='recommend'?renderRecommendPanel(p):renderManualPanel()}`}
+      <div class="label" style="margin:20px 0 10px">已确认的修读记录 · ${p.courses.length} 门</div>
+      ${courseListHTML(p)}
+      <div class="boundary"><b>边界：</b>课程信息全部由你主动提供或勾选确认，不爬取教务系统；上传解析与公开推荐都只是候选，导入结果由你本人核对。</div>
+    </div>`;
+  }else if(pg===2){
+    body = `<div class="card">
+      <div class="label">第 3 页 · 已有成果（作业 / 项目 / 实习 / 竞赛）</div>
+      <div class="add-row">
+        <select id="ach-type" aria-label="成果类型"><option>课程作业</option><option>项目</option><option>竞赛</option><option>实习实践</option><option>其他</option></select>
+        <input id="ach-input" placeholder="成果名称，如：《市场营销》期末小组作业" aria-label="成果名称">
+      </div>
+      <div class="field"><label for="ach-desc">成果简介 <small>选填</small></label><textarea id="ach-desc" rows="2" placeholder="例如：小组为校内二手交易平台设计了商品检索功能。"></textarea></div>
+      <div class="add-row" style="margin-top:12px"><button class="btn primary" data-action="ach-add">保存成果</button></div>
+      ${p.achievements.length?p.achievements.map(a=>`<div class="list-row">
+        <div class="lr-main"><div class="lr-title">${esc(a.title)}</div><div class="lr-sub">${esc(a.type)} · ${esc(a.id)}${a.desc?' · '+esc(a.desc):''}</div><div class="lr-sub">${a.role?'个人角色：'+esc(a.role)+' · ':''}材料 ${a.materials.length} 项</div></div>
+        <button class="btn small" data-action="ach-evidence" data-id="${esc(a.id)}">补充角色与材料</button>
+        <button class="lr-del" data-action="ach-del" data-id="${esc(a.id)}" aria-label="删除${esc(a.title)}">✕</button>
+      </div>`).join(''):'<div class="empty" style="padding:26px"><h3>还没有成果记录</h3><p>课程作业也算。之后可以用「作业变证据」把它拆成可核验的能力证据。</p></div>'}
+      <div class="boundary"><b>边界：</b>团队作业要明确个人负责部分；成果只是"待核验材料"，不等于已认证的能力。</div>
+    </div>`;
+  }else{
+    body = `<div class="card">
+      <div class="label">第 4 页 · 可投入时间与确认</div><p id="draft-status" role="status">${profileStatus()}</p>
+      <div class="field full" style="margin-bottom:18px"><label>每周可投入额外时间</label>
+        <div class="range-wrap"><input type="range" aria-label="每周可用时间" min="0" max="40" step="1" data-field="weeklyHours" value="${p.weeklyHours}"><span class="range-val num" id="hours-val">${p.weeklyHours}<small> 小时/周</small></span></div>
+        <span class="hint">用于后续项目任务的时间校验——推荐必须本学期能执行，而不只是看起来相关。</span>
+      </div>
+      <div class="field" style="max-width:340px;margin-bottom:18px"><label>可实习时间</label>
+        <select data-field="intern" aria-label="可实习时间">${INTERN_WINDOWS.map(x=>`<option ${p.intern===x?'selected':''}>${x}</option>`).join('')}</select>
+      </div>
+      <div class="summary-box">
+        <b>当前草稿摘要</b><br>
+        ${esc(p.school||'（学校未填）')} · ${esc(p.major||'（专业未填）')} · ${esc(gradeLabel(p))}<br>
+        ${p.rank&&p.rankTotal?`排名 ${p.rank}/${p.rankTotal}（前 ${(pct(p)*100).toFixed(1)}%）`:'排名未填'} · ${p.gpa!=null?'均分 '+p.gpa:'均分未填'} · 每周 <span id="draft-hours">${p.weeklyHours}</span> 小时<br>
+        已修课程 ${p.courses.length} 门 · 已有成果 ${p.achievements.length} 段 · 可实习：<span id="draft-intern">${esc(p.intern)}</span>
+      </div>
+      ${state.confirmed?`<p>上次确认：${esc(versionLabel(state.confirmed,state.priorVersions.length))}</p>`:''}
+      <div class="boundary">草稿自动加密保存在本浏览器。点击确认后，首页与诊断才会使用新版本。共用设备请在用完后退出。</div>
+      <div class="acq-bar"><button class="btn" data-action="profile-export">导出本人档案（JSON）</button><button class="btn danger-ghost" data-action="profile-delete">删除本人档案</button></div>
+    </div>`;
+  }
+  return `
+  <div class="kicker">Step 01 · 建立个人档案</div>
+  <h1 class="page-title">先知道学生的起点，<em>才能谈个性化。</em></h1>
+  <p class="page-sub">回答"我在哪所学校、学到哪里、有哪些成果、还能投入多少时间"。本页只建立事实，不急着推荐职业。</p>
+  <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+    <button class="btn primary small" data-action="profile-history">查看历史档案（${confirmedVersions().length}）</button>
+    <button class="btn small" data-action="demo-fill">⚡ 一键填入演示档案</button>
+    <span class="muted" style="font-size:12px;align-self:center">演示档案：临江大学 · 汉语言文学 · 大三 · 18/120 · 均分 82</span>
+  </div>
+  ${body}
+  ${pagerHTML(PROFILE_PAGES,pg,'profile-prev',pg===3?'profile-save':'profile-next',pg===3?'确认这份档案，去就业规划 ✓':'下一步 →')}`;
+}
+function rankPreview(p){
+  const r = pct(p);
+  return r === null ? '填写排名与总人数后显示排名百分比' : `专业排名：前 ${Number((r*100).toFixed(1))}%`;
+}
+function syncBasicProfile(focusError=false){
+  const panel = $('#basic-profile');
+  const values = {};
+  const errors = {};
+  for(const input of panel.querySelectorAll('input[type="number"]')){
+    const key = input.dataset.field;
+    values[key] = profileNumber(key,input.value);
+    if(input.validity.badInput || Number.isNaN(values[key])){
+      errors[key] = key === 'gpa' ? '均分须为 0 到 100 之间的数字。' : '请输入大于 0 的整数。';
+    }
+  }
+  if(!errors.rank && !errors.rankTotal && values.rankTotal !== null && values.rank > values.rankTotal){
+    errors.rank = `专业排名不能超过专业总人数（${values.rankTotal} 人）。`;
+  }
+  for(const key of Object.keys(values)){
+    $('#basic-'+key).setAttribute('aria-invalid',String(Boolean(errors[key])));
+    $('#error-'+key).textContent = errors[key] || '';
+  }
+  const p = state.profile;
+  p.school = $('#basic-school').value.trim();
+  p.major = $('#basic-major').value.trim();
+  p.grade = $('#basic-grade').value;
+  if(!errors.gpa) p.gpa = values.gpa;
+  if(!errors.rank && !errors.rankTotal){
+    p.rank = values.rank;
+    p.rankTotal = values.rankTotal;
+  }
+  $('#pct-preview').textContent = errors.rank || errors.rankTotal ? '' : rankPreview(p);
+  $('#basic-storage-error').hidden = save();
+  const firstError = Object.keys(errors)[0];
+  if(firstError && focusError) $('#basic-'+firstError).focus();
+  return !firstError;
+}
+function courseKey(name){ return name.normalize('NFKC').trim().toLowerCase().replace(/\s+/g,''); }
+function courseOrigin(c){
+  return [c.school || '学校未填',c.major || '专业未填',c.version || '版本未填',c.source || '旧记录 · 来源未记录'].join(' · ');
+}
+function displayStatus(status){ return status === '已通过' ? '已修' : status; }
+function courseListHTML(p){
+  if(!p.courses.length) return '<div class="empty" style="padding:24px"><h3>还没有课程记录</h3><p>上传培养方案、按专业勾选，或手动添加。未知信息留空不影响后续。</p></div>';
+  return p.courses.map((c,i)=>`<div class="list-row">
+    <div class="lr-main"><div class="lr-title">${esc(c.name)}</div><div class="lr-sub">${esc(courseOrigin(c))}${c.cr?' · '+esc(c.cr)+' 学分':''}${c.tm?' · 第 '+esc(c.tm)+' 学期':''}</div></div>
+    <span class="tag ${displayStatus(c.status)==='已修'?'':c.status==='在修'?'blue':'warn'}">${esc(displayStatus(c.status))}</span>
+    <button class="lr-del" data-action="course-del" ${state.courseReview?'disabled':''} data-i="${i}" aria-label="删除">✕</button>
+  </div>`).join('');
+}
+function renderManualPanel(){
+  return `<div class="add-row">
+    <input id="course-input" placeholder="课程名，如：数据库原理" aria-label="课程名">
+    <select id="course-status" aria-label="修读状态"><option>已修</option><option>在修</option><option>未通过</option></select>
+    <button class="btn primary" data-action="course-add">核对课程 →</button>
+  </div>
+  <div class="suggest-row">${['数据库原理','统计学','Python 程序设计','市场营销','学术写作','传播学概论'].map(c=>`<button class="sug" data-action="course-suggest" data-name="${c}">＋ ${c}</button>`).join('')}</div>`;
+}
+function renderUploadPanel(){
+  const r = state.uploadResult;
+  return `
+  ${state.uploadBusy?`
+    <div class="ev-status" style="padding:20px 0"><span class="spinner"></span>正在解析培养方案，抽取课程候选…</div>
+  `:`
+    <div class="dropzone" id="dropzone" data-action="dz-click" role="button" tabindex="0" aria-label="上传培养方案">
+      <input type="file" id="file-input" hidden accept=".csv,.txt,.md">
+      <div class="dz-icon">🗂️</div>
+      <div class="dz-title">拖入或点击上传培养方案</div>
+      <div class="dz-sub">本地读取 TXT、CSV 或 Markdown 课程名列表。其他格式可先复制课程名称，再粘贴。</div>
+    </div>
+    <div class="or-divider">或粘贴培养方案文本</div>
+    <textarea class="plan-text" id="plan-text" placeholder="把培养方案里的课程列表粘贴进来，如：&#10;数学分析、高等代数、解析几何、常微分方程、概率论…"></textarea>
+    <div style="margin-top:10px"><button class="btn" data-action="parse-text">解析文本 →</button></div>
+  `}
+  ${r?`
+    <div class="acq-head">
+      <span class="ah-title">候选课程 · ${esc(r.fileName)}</span>
+      <span class="conf hi">高置信</span><span class="conf mid">待核对</span>
+      <button class="btn small" data-action="up-all" style="margin-left:auto">全选</button>
+      <button class="btn small" data-action="up-clear">清空</button>
+    </div>
+    <p class="acq-note">${esc(r.note)}</p>
+    ${r.courses.map(c=>`<label class="rec-row ${state.upSel.includes(c.n)?'sel':''}">
+      <input type="checkbox" data-up="${esc(c.n)}" ${state.upSel.includes(c.n)?'checked':''}>
+      <span class="rr-name">${esc(c.n)}</span>
+      <span class="rr-meta"><span class="cr-pill">${esc(c.cat)}</span>${c.cr?`<span class="cr-pill">${c.cr} 学分</span>`:''}<span class="conf ${c.conf}">${c.conf==='hi'?'高':'待核'}</span></span>
+    </label>`).join('')}
+    <div class="acq-bar">
+      <span class="count">已勾选 <b id="up-count">${state.upSel.length}</b> 门</span>
+      <select id="up-status" class="btn small" style="min-height:36px" aria-label="添加为"><option>已修</option><option>在修</option></select>
+      <button class="btn primary" id="up-add" data-action="up-add" ${state.upSel.length?'':'disabled'}>核对所选 (${state.upSel.length})</button>
+    </div>
+  `:`<p class="acq-note" style="margin-top:12px">上传或粘贴后，这里会列出抽取到的课程候选；勾选你确认修读过的，再批量加入档案。</p>`}`;
+}
+function renderRecommendPanel(p){
+  if(!p.major.trim()){
+    return `<div class="empty" style="padding:26px"><h3>先告诉我你的专业</h3><p>公开课程推荐按专业匹配。回到第 1 页填写专业，或直接上传培养方案 / 手动添加。</p>
+      <button class="btn primary" style="margin-top:12px" data-action="goto-page1">← 去填专业</button></div>`;
+  }
+  const cur = getCurriculum(p.major);
+  const groups = cur.groups.map(g=>{
+    const selN = g.courses.filter(c=>state.recSel.includes(c.n)).length;
+    return `<div class="rec-group" data-group="${esc(g.cat)}">
+      <div class="rg-head"><span class="rg-cat">${esc(g.cat)}</span><span class="rg-count">${selN}/${g.courses.length} 已选</span></div>
+      ${g.courses.map(c=>`<label class="rec-row ${state.recSel.includes(c.n)?'sel':''}" data-name="${esc(c.n)}">
+        <input type="checkbox" data-rec="${esc(c.n)}" ${state.recSel.includes(c.n)?'checked':''}>
+        <span class="rr-name">${esc(c.n)}</span>
+        <span class="rr-meta"><span class="cr-pill">${c.cr} 学分</span><span class="cr-pill">第 ${c.tm} 学期</span></span>
+      </label>`).join('')}
+    </div>`;
+  }).join('');
+  return `
+  <div class="acq-head">
+    <span class="ah-title">候选课程 · ${esc(cur.label)}专业参考</span>
+    <button class="btn small" data-action="rec-core" style="margin-left:auto">全选专业必修</button>
+    <button class="btn small" data-action="rec-clear">清空</button>
+  </div>
+  <p class="acq-note">${esc(cur.source)}${cur.matched?'':' · 未匹配到该专业模板，先提供通识与方法课程，建议上传培养方案或手动补充。'}</p>
+  <input class="rec-search" id="rec-search" placeholder="🔍 在推荐课程中筛选，如：分析 / 英语 / 数据" aria-label="筛选推荐课程">
+  <div id="rec-groups">${groups}</div>
+  <div class="acq-bar">
+    <span class="count">已勾选 <b id="rec-count">${state.recSel.length}</b> 门</span>
+    <select id="rec-status" class="btn small" style="min-height:36px" aria-label="添加为"><option>已修</option><option>在修</option></select>
+    <button class="btn primary" id="rec-add" data-action="rec-add" ${state.recSel.length?'':'disabled'}>核对所选 (${state.recSel.length})</button>
+  </div>`;
+}
+
+/* ================= 模块：就业规划 ================= */
+function renderPaths(){
+  const p=publishedProfile();
+  return `<h1 class="page-title">就业规划</h1>
+    <p class="page-sub">用课程和项目准备求职材料，按实习和校招窗口安排投递。</p>
+    <div class="card"><h2>我的求职准备</h2>
+    ${state.confirmed?`<p>已确认 ${p.courses.length} 门课程、${p.achievements.length} 项成果。每周可用 ${p.weeklyHours} 小时，实习窗口：${esc(p.intern)}。</p>
+    <button class="btn primary" data-action="nav" data-module="diag">查看就业诊断 →</button>`:
+    `<p>确认个人档案后，可根据已有成果和可实习时间查看就业诊断。</p>
+    <button class="btn primary" data-action="nav" data-module="profile">去建立档案 →</button>`}
+    </div><div class="card" style="margin-top:16px"><h2>从课程作业准备项目经历</h2><p>${esc(PATHS.jiuye.monday)}</p>
+    <button class="btn" data-action="nav" data-module="evidence">整理我的作业 →</button></div>`;
+}
+
+/* ================= 模块：专属诊断 ================= */
+function renderDiag(){
+  if(!state.confirmed) return `<h1 class="page-title">先确认个人档案</h1><p>确认后会按这份档案生成诊断。</p><button class="btn primary" data-action="time-review">去确认档案</button>`;
+  const idx = Math.min(state.diagIndex,state.paths.length-1);
+  const key = state.paths[idx], P = PATHS[key], p = publishedProfile();
+  const f = feasibility(key), nh = nextHard(key), d = nh?daysTo(nh.date):null;
+  const nodes = TIMELINE[key].map(n=>`
+    <div class="tl-node ${n.s}">
+      <div class="tl-date">${n.t}</div>
+      <div class="tl-e">${n.e}</div>
+      <div class="tl-d">${n.d}</div>
+      ${n.s==='now'?'<span class="tl-flag now">现在能做</span>':n.s==='hard'?`<span class="tl-flag hard">硬日期${n.date&&daysTo(n.date)>0?' · 剩'+daysTo(n.date)+'天':''}</span>`:''}
+    </div>`).join('');
+  const r = pct(p);
+  return `
+  <div class="kicker">为你生成 · 按档案实时计算</div>
+  <h1 class="page-title">我的<em>就业诊断</em></h1>
+  <div class="diag-banner">
+    <span style="font-weight:800">诊断依据：</span>
+    <span class="chip">${esc(p.school||'演示院校')}</span>
+    <span class="chip">${esc(p.major||'演示专业')} · ${esc(gradeLabel())}</span>
+    ${r!=null?`<span class="chip">排名 ${p.rank}/${p.rankTotal}</span>`:''}
+    ${p.gpa!=null?`<span class="chip">均分 ${p.gpa}</span>`:''}
+    <span class="chip">每周 ${p.weeklyHours}h</span>
+    ${!p.saved?'<span class="chip" style="border-color:#f0c36d;color:#f0c36d">未建档 · 演示口径</span>':''}
+  </div>
+  <div class="card ${P.tone}" style="border-left:5px solid var(--tone)">
+    <div class="diag-head">
+      <h3>${P.name} <span class="verdict">${f.label}</span></h3>
+      ${d!=null?`<span class="remain-badge">距「${nh.e}」约 ${d} 天</span>`:''}
+    </div>
+    <p class="threshold-line">${f.detail} ${thresholdExtra(key)}</p>
+    <div class="tl-track">${nodes}</div>
+    <div class="diag-actions">
+      <div class="monday-card">
+        <div class="label">📌 本周一件事</div>
+        <div class="m-task">${P.monday}</div>
+        <label class="week-check ${state.weeklyDone[key]?'done':''}" style="margin-top:10px"><input type="checkbox" data-action="week-done" data-path="${key}" ${state.weeklyDone[key]?'checked':''}>${state.weeklyDone[key]?'已完成':'完成后勾选'}</label>
+      </div>
+      <div class="translate-card">
+        <div class="label">这条路怎么看你的作业</div>
+        <p>${P.translate}</p>
+        <button class="btn small" style="margin-top:10px" data-action="nav" data-module="evidence">去拆一份作业 →</button>
+      </div>
+    </div>
+  </div>
+  <button class="btn primary" data-action="nav" data-module="intel">查看就业情报 →</button>
+  <div class="statement">每个节点只写<em>事实与后果</em>，不替你做价值判断。家庭经济、性格、风险偏好——AI 没有资格替你选。</div>
+  <p class="footnote">时间口径为 2028 届（当前大三上）；门槛数值为演示口径，正式产品中以你校当年政策为准。所有日期标注来源与最后核实日期。</p>`;
+}
+
+/* ================= 模块3.5：定向情报 ================= */
+function intelFeedHTML(){
+  const list = intelVisible();
+  if(!list.length){
+    const allGone = buildIntel().length && buildIntel().every(i=>state.intelDismissed.includes(i.id));
+    return `<div class="card intel-empty"><span class="big">🌫️</span>
+      <h3>${allGone?'情报已全部忽略':'当前筛选下没有情报'}</h3>
+      <p>${allGone?'你忽略了所有推送。可以一键恢复，或调整筛选条件。':'试试放宽分类 / 路径 / 等级筛选，或清空搜索词。'}</p>
+      <div class="row" style="justify-content:center">
+        ${allGone?`<button class="btn btn-primary" data-action="intel-restore">恢复全部忽略</button>`:''}
+        <button class="btn btn-ghost" data-action="intel-clearfilter">清空筛选</button>
+      </div></div>`;
+  }
+  return list.map(i=>{
+    const c = INTEL_CATS[i.cat];
+    const read = state.intelRead.includes(i.id);
+    const saved = state.intelSaved.includes(i.id);
+    const expanded = state.intelExpanded===i.id;
+    const d = i.deadline?daysTo(i.deadline):null;
+    const toneBg = c.cls==='t-days'?'var(--danger-soft)':c.cls==='t-week'?'var(--warn-soft)':c.cls==='t-know'?'var(--know-soft)':'var(--sea-soft)';
+    const toneFg = c.cls==='t-days'?'var(--danger)':c.cls==='t-week'?'var(--warn)':c.cls==='t-know'?'var(--know)':'var(--sea)';
+    return `<div class="intel-card ${read?'is-read':''} ${expanded?'is-open':''}" data-id="${i.id}">
+      <div class="intel-top">
+        <span class="ri-icon ${c.cls}">${c.icon}</span>
+        <div class="intel-head">
+          <div class="intel-tags">
+            <span class="tag tag-sm" style="background:${toneBg};color:${toneFg}">${c.label}</span>
+            <span class="lv lv-${i.lv}">${i.lv} 级来源</span>
+            ${i.paths.map(k=>`<span class="tag tag-sm" style="background:${PATHS[k].bg};color:${PATHS[k].color}">${PATHS[k].letter} ${PATHS[k].name}</span>`).join('')}
+            ${read?'<span class="tag tag-sm tag-neutral">已读</span>':''}
+          </div>
+          <h3>${esc(i.title)}</h3>
+        </div>
+        <span class="intel-score" title="个性化匹配分">${i.score}</span>
+      </div>
+      <p class="intel-body">${esc(i.body)}</p>
+      <div class="intel-why"><span class="why-label">为什么推给你</span>${i.why.map(w=>`<span class="why-chip">${esc(w)}</span>`).join('')}</div>
+      ${expanded?`<div class="intel-detail">${esc(i.detail)}</div>`:''}
+      <div class="intel-foot">
+        <span class="intel-src">${esc(i.src)} · ${i.date}${d!=null&&d>0?` · <b style="color:var(--danger)">剩 ${d} 天</b>`:''}</span>
+        <span class="intel-acts">
+          <button class="btn btn-sm btn-ghost" data-action="intel-expand" data-id="${i.id}">${expanded?'收起':'详情'}</button>
+          <button class="btn btn-sm ${saved?'btn-primary':'btn-ghost'}" data-action="intel-save" data-id="${i.id}">${saved?'★ 已收藏':'☆ 收藏'}</button>
+          ${read?'':`<button class="btn btn-sm btn-ghost" data-action="intel-read" data-id="${i.id}">已读</button>`}
+          <button class="btn btn-sm btn-ghost" data-action="intel-dismiss" data-id="${i.id}">忽略</button>
+        </span>
+      </div>
+    </div>`;
+  }).join('');
+}
+function renderIntel(){
+  const p = publishedProfile();
+  if(!p.saved) return `<h1 class="page-title">就业情报</h1><div class="card"><p>确认个人档案后，这里会结合课程、成果与实习窗口展示求职提醒。</p>
+    <button class="btn primary" data-action="nav" data-module="profile">去建立档案 →</button></div>`;
+  const f = state.intel;
+  const all = buildIntel();
+  const unread = all.filter(i=>!state.intelRead.includes(i.id)&&!state.intelDismissed.includes(i.id)).length;
+  const catCounts = {}; all.forEach(i=>{ if(!state.intelDismissed.includes(i.id)) catCounts[i.cat]=(catCounts[i.cat]||0)+1; });
+  const dismissed = state.intelDismissed.length;
+  return `<div class="kicker">定向情报 · Intel</div>
+    <h1 class="page-title">为你定向匹配的信息，<em>每条都说清为什么。</em></h1>
+    <p class="page-sub">规则引擎读取你的档案与路径，定向匹配信息——每条都标注「为什么推给你」与来源等级。当前 <b>${unread}</b> 条未读。</p>
+
+    <div class="intel-pushstrip">
+      <span class="ps-label">推送触发</span>
+      <span class="ps-item">建档完成 · 即时</span><span class="ps-dot">→</span>
+      <span class="ps-item">每周一 08:00 · 本周情报</span><span class="ps-dot">→</span>
+      <span class="ps-item">硬日期前 30 / 7 / 1 天 · 倒计时提醒</span><span class="ps-dot">→</span>
+      <span class="ps-item">政策更新 · 事件驱动</span>
+    </div>
+
+    <div class="card intel-toolbar">
+      <input type="search" id="intel-search" class="input" placeholder="搜索情报标题 / 正文 / 信号…" value="${esc(f.q)}" style="flex:1;min-width:180px">
+      <select class="select" data-field="intel.lv" style="width:auto">
+        <option value="all">全部来源</option><option value="A" ${f.lv==='A'?'selected':''}>A 官方</option><option value="B" ${f.lv==='B'?'selected':''}>B 聚合</option>
+      </select>
+      <select class="select" data-field="intel.sort" style="width:auto">
+        <option value="score" ${f.sort==='score'?'selected':''}>按匹配分</option>
+        <option value="deadline" ${f.sort==='deadline'?'selected':''}>按截止临近</option>
+        <option value="date" ${f.sort==='date'?'selected':''}>按最新发布</option>
+      </select>
+      <button class="btn btn-sm ${f.savedOnly?'btn-primary':'btn-ghost'}" data-action="intel-savedonly">${f.savedOnly?'★ 只看收藏':'☆ 只看收藏'}</button>
+    </div>
+
+    <div class="intel-chips">
+      <button class="fchip ${f.cat==='all'?'active':''}" data-action="intel-cat" data-cat="all">全部 ${all.filter(i=>!state.intelDismissed.includes(i.id)).length}</button>
+      ${Object.keys(INTEL_CATS).filter(k=>catCounts[k]).map(k=>`<button class="fchip ${f.cat===k?'active':''}" data-action="intel-cat" data-cat="${k}">${INTEL_CATS[k].icon} ${INTEL_CATS[k].label} ${catCounts[k]}</button>`).join('')}
+      <span style="flex:1"></span>
+      <button class="btn btn-sm btn-ghost" data-action="intel-readall">全部已读</button>
+      ${dismissed?`<button class="btn btn-sm btn-ghost" data-action="intel-restore">恢复忽略 (${dismissed})</button>`:''}
+    </div>
+
+    <div id="intel-feed" class="intel-feed">${intelFeedHTML()}</div>
+
+    <div class="boundary"><span class="b-ico">🧠</span><div>当前为<b>规则引擎 v0</b>（可解释、零模型依赖）。后续接入小模型做重排与摘要，接口已预留：<code>POST /api/intel/rerank</code>。技术实现见 <button class="btn btn-sm btn-ghost" data-action="nav" data-module="tech" style="padding:2px 8px">引擎与技术 →</button></div></div>`;
+}
+
+function analyzeText(text){
+  const lower = text.toLowerCase();
+  let best = null, bestScore = 0;
+  SCENARIOS.forEach(sc=>{
+    const score = sc.kw.reduce((n,k)=>n+(lower.includes(k)?1:0),0);
+    if(score>bestScore){bestScore=score;best=sc;}
+  });
+  if(best&&bestScore>=2){
+    const hidden = best.hidden;
+    return {engine:'rule',scenario:best,project:best.project,gaps:best.gaps,bullets:best.bullets,hidden,matched:best.kw.filter(k=>lower.includes(k))};
+  }
+  const skills = [];
+  SKILL_DICT.forEach(([k,v])=>{ if(lower.includes(k)&&!skills.includes(v)) skills.push(v); });
+  if(!skills.length) skills.push('待识别 · 先补充作业细节');
+  const role = /我负责|负责|担任|主导/.test(text)?'有明确个人分工':'分工待确认';
+  const deliverable = ['报告','方案','代码','设计','论文','调研','作品','系统'].find(w=>text.includes(w))||'交付物';
+  return {engine:'rule',scenario:null,
+    project:{name:'课程作业项目化整理 · '+deliverable,skills,roles:'待对照目标岗位要求核实'},
+    gaps:['补一个可量化的结果：数字、图表或对比','留一份第三方反馈：老师评语 / 用户评价','整理成可复现的交付物：链接、文档或演示'],
+    bullets:[`在小组作业中${role==='有明确个人分工'?'承担明确个人分工':'承担部分工作'}，完成${deliverable}（细节待核验）`,`围绕作业要求产出可检查的${deliverable}，过程材料可出示`,'按"角色 + 动作 + 可核验结果"补全后，可写入简历'],
+    hidden:'任何一份完整的作业交付，都能拆成"角色 + 动作 + 可核验结果"三件套。你缺的往往不是经历，是把经历翻译成证据的这一步。',
+    matched:SKILL_DICT.filter(([k])=>lower.includes(k)).map(([k])=>k)};
+}
+function highlightText(text,matched){
+  let out = esc(text);
+  matched.forEach(k=>{
+    const re = new RegExp(k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
+    out = out.replace(re,m=>'<mark>'+m+'</mark>');
+  });
+  return out;
+}
+function findAchievement(id){ return state.profile.achievements.find(a=>a.id===id); }
+let evidenceRun=0;
+function selectEvidenceTarget(id){
+  evidenceRun++;
+  const item=findAchievement(id);
+  state.evTarget=item?.id ?? null;
+  state.evText=item ? (item.originalText ?? item.desc ?? '') : null;
+  state.evBusy=false;
+  state.evResult=null;
+}
+function createAchievement(type,title,desc=''){
+  const item={id:newAchievementId(),type,title,desc,role:'',materials:[]};
+  state.profile.achievements.push(item);
+  return item;
+}
+function renderEvidence(){
+  const sc = SCENARIOS[state.evScenario];
+  const r = state.evResult;
+  const item=findAchievement(state.evTarget);
+  return `
+  <div class="kicker">高光 · 30 秒看结果</div>
+  <h1 class="page-title">一段作业原文，<em>变成三条可用证据。</em></h1>
+  <p class="page-sub">不是"生成漂亮文字"：把作业拆成可核验的能力证据，标出缺的那一块，再顺手补上你不知道的规则、门槛与日期。没做的，不能写成做了。</p>
+  <div class="ev-grid">
+    <div class="ev-in">
+      <div class="field"><label for="ev-target">关联的成果</label><select id="ev-target"><option value="">另起一份作业</option>${state.profile.achievements.map(a=>`<option value="${esc(a.id)}" ${a.id===state.evTarget?'selected':''}>${esc(a.title)} · ${esc(a.id)}</option>`).join('')}</select></div>
+      ${item?`<div class="field"><label for="ev-role">个人角色</label><input id="ev-role" value="${esc(item.role)}" placeholder="例如：负责访谈提纲和数据清洗"></div>
+      <div class="field"><label for="ev-materials">材料链接或说明 <small>每行一项</small></label><textarea id="ev-materials" rows="2" placeholder="报告链接、作品地址或材料名称">${esc(item.materials.join('\n'))}</textarea></div>
+      <small id="ev-local-status" role="status">角色和材料随输入保存到本地。</small>`:''}
+      <div class="label">学生贴进来的一段话（原文，不改写）</div>
+      <textarea id="ev-text" placeholder="贴上你的课程作业 / 项目 / 兼职描述…">${esc(state.evText ?? sc.text)}</textarea>
+      <div class="scenario-row" style="${item?'display:none':''}">${SCENARIOS.map((s,i)=>`<button class="sc-chip ${i===state.evScenario?'on':''}" data-action="ev-scenario" data-i="${i}">${s.chip}</button>`).join('')}</div>
+      <button class="btn primary" style="width:100%" data-action="ev-analyze" ${state.evBusy?'disabled':''}>${state.evBusy?'正在分析…':'⚡ 30 秒拆成证据'}</button>
+      <div class="engine-box">
+        <b>分析引擎</b>
+        <select id="ev-engine" aria-label="分析引擎">
+          <option selected>本地规则引擎 v0（当前 · 纯前端）</option>
+          <option disabled>小模型分析（预留 · 待接入）</option>
+        </select>
+        已预留模型接口 <code>POST /api/evidence/analyze</code>：前端调用层与引擎解耦，小模型接入后此处无缝切换，输出结构不变。
+      </div>
+      <p class="footnote" style="margin-top:12px">学生的自我认知往往是："我没什么经历，就做过一次课程作业。"</p>
+    </div>
+    <div class="ev-out" id="ev-out">
+      ${state.evBusy?`
+        <div class="label">系统输出</div>
+        <div class="ev-status"><span class="spinner"></span><span id="ev-status-text">读取原文…</span></div>
+        <div class="ev-progress"><span id="ev-bar"></span></div>
+        <p class="muted" style="font-size:12.5px">识别角色与交付物 → 匹配技能证据 → 补上你不知道的规则与日期</p>
+      `:r?evResultHTML(r):`
+        <div class="label">系统输出</div>
+        <div class="empty" style="border:none;background:transparent;padding:60px 20px">
+          <div class="big">⚓</div>
+          <h3>左边贴一段作业，点「30 秒拆成证据」</h3>
+          <p>或先点一个预设场景试试：计算机 / 经管 / 中文 / 材料 / 外语 / 师范。</p>
+        </div>
+      `}
+    </div>
+  </div>
+  <div class="boundary"><b>AI 在这一步做了什么：</b>不是生成漂亮文字，是把一段作业原文拆成可核验的能力证据，并标出缺的那一块；更关键的是<span style="color:var(--red)">顺手补上学生不知道的规则、门槛与日期</span>。每条结论都能展开看依据；没做的不能写成做了。</div>`;
+}
+function evResultHTML(r){
+  const bullets = r.bullets.length
+    ? r.bullets.map(b=>`<div class="ev-bullet">${esc(b)}<span class="tag">可核验</span></div>`).join('')
+    : '<p class="muted" style="font-size:13px">暂不生成 bullet——先完成上面的强化点，有了真实材料再回来写。没做的不能写成做了。</p>';
+  return `
+  <div class="label">系统输出 · ${r.scenario?'场景匹配':'通用整理'} <span class="tag blue">${r.engine==='rule'?'规则引擎 v0':''}</span></div>
+  <div class="ev-recognize"><div class="label">识别到的关键词</div>${r.matched.length?highlightText(r._text,r.matched):'<span class="muted">未命中预设关键词，按通用三件套整理。</span>'}</div>
+  <div class="ev-section">
+    <div class="es-title">① 这不是"课程作业"，是一条项目经历 <span class="tag">可核验</span></div>
+    <div class="es-body"><b>${esc(r.project.name)}</b><br>
+    覆盖能力：${r.project.skills.map(s=>`<span class="pill">${esc(s)}</span>`).join('')}<br>
+    <span class="muted">可投方向：${esc(r.project.roles)}</span></div>
+  </div>
+  <div class="ev-section">
+    <div class="es-title">② 这周就能补的强化点 <span class="tag warn">缺口</span></div>
+    <div class="es-body">${r.gaps.map(g=>`<div class="ev-bullet">${esc(g)}</div>`).join('')}</div>
+  </div>
+  <div class="ev-section">
+    <div class="es-title">③ 可直接改的简历 bullet</div>
+    <div class="es-body">${bullets}</div>
+  </div>
+  <div class="ev-hidden"><b>你不知道的：</b>${esc(r.hidden)}</div>
+  <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+    <button class="btn primary" data-action="ev-save">${state.evTarget?'保存到这条成果':'存入我的成果档案'} ✓</button>
+    <button class="btn" data-action="nav" data-module="diag">看它怎么服务我的路径 →</button>
+  </div>`;
+}
+function runEvidence(){
+  const text = ($('#ev-text')?$('#ev-text').value:'').trim();
+  if(!text){ toast('先贴一段作业原文，或点一个预设场景','warn'); return; }
+  if(state.evBusy) return;
+  const run=++evidenceRun;
+  state.evText=text;
+  state.evBusy = true;
+  const result = analyzeText(text);
+  result._text = text;
+  render();
+  const steps = [['读取原文…',15],['识别角色与交付物…',40],['匹配技能证据…',68],['补上你不知道的规则与日期…',90]];
+  steps.forEach(([txt,pctv],i)=>{
+    setTimeout(()=>{
+      if(run!==evidenceRun) return;
+      const st = $('#ev-status-text'), bar = $('#ev-bar');
+      if(st) st.textContent = txt;
+      if(bar) bar.style.width = pctv+'%';
+    },420*i+200);
+  });
+  setTimeout(()=>{
+    if(run!==evidenceRun) return;
+    state.evBusy = false;
+    state.evResult = result;
+    if(state.module!=='evidence'){ save(); return; }
+    render();
+    const out = $('#ev-out');
+    if(out) out.scrollIntoView({behavior:'smooth',block:'nearest'});
+    toast('分析完成：3 组证据已生成');
+  },420*steps.length+500);
+}
+
+/* ================= 雷达抽屉 ================= */
+function openRadar(){
+  $('#rd-body').innerHTML = radarItems().map(i=>radarItemHTML(i,true)).join('')||'<div class="empty"><div class="big">🌊</div><h3>暂无推送</h3><p>都被你处理完了，或下周一再来。</p></div>';
+  $('#radar-drawer').classList.add('show');
+  $('#scrim').classList.add('show');
+}
+function closeOverlays(){
+  $('#radar-drawer').classList.remove('show');
+  $('#scrim').classList.remove('show');
+  $('#sidebar').classList.remove('open');
+}
+
+/* ================= 课程获取 ================= */
+function startCourseReview(candidates, status, source, school, major){
+  if(!candidates.length) return;
+  const seen = new Set();
+  const rows = [];
+  for(const c of candidates){
+    const key = courseKey(c.n);
+    if(seen.has(key)) continue;
+    seen.add(key);
+    const duplicate = state.profile.courses.some(item=>courseKey(item.name)===key);
+    rows.push({name:c.n, cr:c.cr??null, tm:c.tm??null, status, decision:duplicate?'keep':'add'});
+  }
+  state.courseReview = {school,major,version:'',source,rows};
+  render();
+}
+function renderCourseReview(){
+  const batch = state.courseReview;
+  return `<div class="acq-head"><strong>核对候选课程 · ${batch.rows.length} 门</strong></div>
+    <p class="acq-note">来源：${esc(batch.source)}。请核对本批课程所属的培养方案，再逐门确认修读状态。</p>
+    <div class="form-grid">${[['school','所属学校'],['major','所属专业'],['version','培养方案版本']].map(([key,label])=>`
+      <div class="field"><label for="batch-${key}">${label}</label><input id="batch-${key}" data-course-context="${key}" value="${esc(batch[key])}" placeholder="${key==='version'?'如：2024 级培养方案':'未知可留空'}"></div>`).join('')}</div>
+    ${batch.rows.map((row,i)=>{
+      const options = [];
+      const matches = [];
+      state.profile.courses.forEach((c,index)=>{
+        if(courseKey(c.name)!==courseKey(row.name)) return;
+        matches.push(`<div class="lr-sub">档案已有：${esc(c.name)} · ${esc(displayStatus(c.status))} · ${esc(courseOrigin(c))}</div>`);
+        options.push(['update:'+index,'更新记录 '+(matches.length)+'：'+displayStatus(c.status)+' · '+courseOrigin(c)]);
+      });
+      options.unshift(['keep',matches.length?'保留原记录，跳过本门':'跳过本门']);
+      options.push(['add',matches.length?'作为另一条修读记录新增':'新增修读记录']);
+      return `<div class="list-row"><div class="lr-main"><div class="lr-title">${esc(row.name)}</div>${matches.join('')}
+        <div class="add-row"><label>本次状态 <select data-review-status="${i}">${['已修','在修','未通过'].map(v=>`<option ${row.status===v?'selected':''}>${v}</option>`).join('')}</select></label>
+        <label>处理方式 <select style="max-width:100%" data-review-decision="${i}">${options.map(([v,label])=>`<option value="${v}" ${row.decision===v?'selected':''}>${esc(label)}</option>`).join('')}</select></label></div></div></div>`;
+    }).join('')}
+    <div class="acq-bar"><button class="btn" data-action="course-review-cancel">取消核对</button>
+    <button class="btn primary" data-action="course-review-save">确认并保存</button></div>`;
+}
+function commitCourseReview(){
+  const batch = state.courseReview;
+  if(!batch) return;
+  let added=0, updated=0;
+  for(const row of batch.rows){
+    if(row.decision==='keep') continue;
+    const entry = {name:row.name,status:row.status,school:batch.school.trim(),major:batch.major.trim(),
+      version:batch.version.trim(),source:batch.source,cr:row.cr,tm:row.tm};
+    if(row.decision==='add'){
+      state.profile.courses.push(entry); added++;
+    } else {
+      const existing = state.profile.courses[Number(row.decision.split(':')[1])];
+      if(!existing || courseKey(existing.name)!==courseKey(row.name)) continue;
+      for(const key of ['school','major','version','cr','tm']) if(entry[key]==='' || entry[key]==null) entry[key]=existing[key]??entry[key];
+      Object.assign(existing,entry); updated++;
+    }
+  }
+  state.courseReview=null; state.upSel=[]; state.recSel=[];
+  render(); if(!save()){ toast('本次修改仅在当前页面生效，浏览器未能保存。','warn'); return; }
+  toast(`已新增 ${added} 门，更新 ${updated} 门，跳过 ${batch.rows.length-added-updated} 门。`);
+}
+function setPlanCandidates(text,source,fileName,school,major){
+  const courses = parsePlanText(text,major);
+  state.upSel=[];
+  state.uploadResult=courses.length ? {courses,source,fileName,school,major,note:'勾选本人修读过的课程，再核对后保存。'} : null;
+  render();
+  if(!courses.length) toast('未识别到课程名，可粘贴课程名称或手动添加。','warn');
+}
+async function handleFile(file){
+  if(!file || state.uploadBusy) return;
+  state.uploadResult=null; state.upSel=[];
+  if(!/\.(txt|csv|md)$/i.test(file.name)){
+    render(); toast('此格式暂不能读取，请复制课程名称后粘贴。','warn'); return;
+  }
+  const owner=state.profile;
+  const {school,major}=owner;
+  state.uploadBusy=true; render();
+  try{
+    const text=await file.text();
+    if(state.profile!==owner) return;
+    state.uploadBusy=false;
+    setPlanCandidates(text,'文件导入 · '+file.name,file.name,school,major);
+  } catch {
+    if(state.profile!==owner) return;
+    state.uploadBusy=false; render(); toast('文件读取失败，请重试或粘贴课程名称。','warn');
+  }
+}
+function refreshRecBar(){
+  const cnt = $('#rec-count'), btn = $('#rec-add');
+  if(cnt) cnt.textContent = state.recSel.length;
+  if(btn){ btn.disabled = !state.recSel.length; btn.textContent = '核对所选 ('+state.recSel.length+')'; }
+  document.querySelectorAll('#rec-groups .rec-group').forEach(g=>{
+    const rows = [...g.querySelectorAll('.rec-row')];
+    const sel = rows.filter(r=>r.querySelector('input').checked).length;
+    const c = g.querySelector('.rg-count'); if(c) c.textContent = sel+'/'+rows.length+' 已选';
+  });
+}
+function refreshUpBar(){
+  const cnt = $('#up-count'), btn = $('#up-add');
+  if(cnt) cnt.textContent = state.upSel.length;
+  if(btn){ btn.disabled = !state.upSel.length; btn.textContent = '核对所选 ('+state.upSel.length+')'; }
+}
+
+/* ================= 事件 ================= */
+document.addEventListener('click',e=>{
+  const el = e.target.closest('[data-action]');
+  if(!el) return;
+  const a = el.dataset.action;
+  if(a==='nav'){ state.module = el.dataset.module; closeOverlays(); render(); window.scrollTo({top:0}); }
+  else if(a==='toggle-sidebar'){ $('#sidebar').classList.toggle('open'); $('#scrim').classList.toggle('show',$('#sidebar').classList.contains('open')); }
+  else if(a==='close-overlays'){ closeOverlays(); }
+  else if(a==='radar-open'){ openRadar(); }
+  else if(a==='radar-close'){ closeOverlays(); }
+  else if(a==='radar-read-all'){ state.radarRead = true; renderChrome(); toast('全部推送已标记已读'); }
+  else if(a==='radar-dismiss'){ state.radarDismissed.push(el.dataset.id); state.radarRead=false; openRadar(); render(); }
+  else if(a==='dash-filter'){ state.dashFilter = el.dataset.f; render(); }
+  else if(a==='demo-fill'){
+    state.courseReview=null; state.uploadBusy=false; state.uploadResult=null; state.recSel=[]; state.upSel=[];
+    selectEvidenceTarget(null);
+    state.profile = restoreProfile(JSON.parse(JSON.stringify(DEMO_PROFILE)));
+    state.profile.saved=false;
+    for(const c of state.profile.courses) Object.assign(c,{school:state.profile.school,major:state.profile.major,version:'',source:'演示档案'});
+    toast('演示档案已填入：临江大学 · 汉语言文学 · 18/120');
+    render();
+  }
+  else if(a==='profile-prev'){ state.profilePage = Math.max(0,state.profilePage-1); render(); }
+  else if(a==='profile-next'){
+    if(state.profilePage===0 && !syncBasicProfile(true)) return;
+    state.profilePage = Math.min(3,state.profilePage+1); render();
+  }
+  else if(a==='profile-save'){
+    vault.action(async()=>{
+      const previous=state.confirmed;
+      if(previous) state.priorVersions.push(previous);
+      state.confirmed={at:new Date().toISOString(),profile:{...structuredClone(state.profile),saved:true}};
+      try{ await vault.flush(); }catch(e){if(previous) state.priorVersions.pop();state.confirmed=previous;save();throw e;}
+      state.module='paths'; render(); window.scrollTo({top:0}); toast('已保存确认档案：'+versionLabel(state.confirmed,state.priorVersions.length));
+    });
+  }
+  else if(a==='course-add'||a==='course-suggest'){
+    const name = a==='course-suggest'?el.dataset.name:($('#course-input')?$('#course-input').value.trim():'');
+    if(!name){ toast('先输入课程名','warn'); return; }
+    startCourseReview([{n:name}],$('#course-status').value,'手动录入',state.profile.school,state.profile.major);
+  }
+  else if(a==='course-review-cancel'){ state.courseReview=null; render(); }
+  else if(a==='course-review-save'){ commitCourseReview(); }
+  else if(a==='course-del'){ state.profile.courses.splice(+el.dataset.i,1); render(); }
+  else if(a==='course-mode'){ state.courseMode = el.dataset.mode; render(); }
+  else if(a==='goto-page1'){ state.profilePage = 0; render(); }
+  else if(a==='dz-click'){ const fi=$('#file-input'); if(fi && e.target!==fi) fi.click(); }
+  else if(a==='parse-text'){
+    const txt = $('#plan-text')?$('#plan-text').value:'';
+    if(!txt.trim()){ toast('先粘贴培养方案文本','warn'); return; }
+    setPlanCandidates(txt,'粘贴培养方案文本','粘贴文本',state.profile.school,state.profile.major);
+  }
+  else if(a==='up-all'){ if(state.uploadResult){ state.upSel = state.uploadResult.courses.map(c=>c.n); render(); } }
+  else if(a==='up-clear'){ state.upSel = []; render(); }
+  else if(a==='up-add'){
+    const r = state.uploadResult; if(!r||!state.upSel.length) return;
+    startCourseReview(r.courses.filter(c=>state.upSel.includes(c.n)),$('#up-status').value,r.source,r.school,r.major);
+  }
+  else if(a==='rec-core'){
+    const cur = getCurriculum(state.profile.major);
+    const core = cur.groups.find(g=>g.cat==='专业必修')||cur.groups.find(g=>g.cat!=='公共必修');
+    const names = core?core.courses.map(c=>c.n):[];
+    state.recSel = [...new Set([...state.recSel,...names])];
+    render();
+  }
+  else if(a==='rec-clear'){ state.recSel = []; render(); }
+  else if(a==='rec-add'){
+    if(!state.recSel.length) return;
+    const candidates=allCurriculumCourses(state.profile.major).filter(c=>state.recSel.includes(c.n));
+    startCourseReview(candidates,$('#rec-status').value,'内置专业参考 · '+getCurriculum(state.profile.major).label,state.profile.school,state.profile.major);
+  }
+  else if(a==='ach-add'){
+    const title = $('#ach-input')?$('#ach-input').value.trim():'';
+    if(!title){ toast('先输入成果名称','warn'); return; }
+    createAchievement($('#ach-type').value,title,$('#ach-desc').value.trim());
+    render(); toast(save()?'已添加成果：'+title:'浏览器未能保存，刷新后这条成果可能丢失。');
+  }
+  else if(a==='ach-evidence'){
+    selectEvidenceTarget(el.dataset.id); state.module='evidence'; render(); window.scrollTo(0,0);
+  }
+  else if(a==='ach-del'){
+    if(el.dataset.id===state.evTarget) selectEvidenceTarget(null);
+    state.profile.achievements=state.profile.achievements.filter(item=>item.id!==el.dataset.id); render();
+  }
+  else if(a==='week-done'){
+    const k = el.dataset.path;
+    state.weeklyDone[k] = el.checked;
+    save(); renderChrome();
+    toast(el.checked?'本周行动完成，雷达已记录 ✓':'已取消完成标记');
+    const card = el.closest('.week-card,.monday-card');
+    if(card){ const task = card.querySelector('.week-task,.m-task'); if(task) task.style.textDecoration = el.checked?'line-through':''; }
+    const lbl = el.closest('.week-check'); if(lbl) lbl.classList.toggle('done',el.checked);
+  }
+  else if(a==='ev-scenario'){
+    selectEvidenceTarget(null); state.evScenario = +el.dataset.i; render();
+  }
+  else if(a==='ev-analyze'){ runEvidence(); }
+  else if(a==='ev-save'){
+    const r = state.evResult; if(!r) return;
+    if(r._text!==$('#ev-text').value.trim()){ toast('原文已修改，请重新分析后保存。','warn'); return; }
+    let item=findAchievement(state.evTarget);
+    if(state.evTarget && !item){ toast('这条成果已移除，请重新选择。','warn'); return; }
+    if(!item){ item=createAchievement('课程作业',r.project.name); state.evTarget=item.id; }
+    item.originalText=r._text;
+    item.suggestedSkills=[...r.project.skills];
+    if(!item.desc) item.desc=r._text;
+    render(); toast(save()?'已保存到成果 '+item.id:'浏览器未能保存，刷新后本次修改可能丢失。');
+  }
+  else if(a==='intel-cat'){ state.intel.cat = el.dataset.cat; render(); }
+  else if(a==='intel-savedonly'){ state.intel.savedOnly = !state.intel.savedOnly; render(); }
+  else if(a==='intel-clearfilter'){ state.intel = {cat:'all',path:'all',lv:'all',q:'',sort:'score',savedOnly:false}; render(); }
+  else if(a==='intel-expand'){ state.intelExpanded = state.intelExpanded===el.dataset.id?null:el.dataset.id; render(); }
+  else if(a==='intel-save'){
+    const id = el.dataset.id, i = state.intelSaved.indexOf(id);
+    if(i>=0){ state.intelSaved.splice(i,1); toast('已取消收藏'); }
+    else { state.intelSaved.push(id); toast('已收藏，可在「只看收藏」中回看'); }
+    render();
+  }
+  else if(a==='intel-read'){
+    const id = el.dataset.id;
+    if(!state.intelRead.includes(id)) state.intelRead.push(id);
+    render();
+  }
+  else if(a==='intel-readall'){
+    buildIntel().forEach(i=>{ if(!state.intelRead.includes(i.id)) state.intelRead.push(i.id); });
+    render(); toast('全部情报已标记已读');
+  }
+  else if(a==='intel-dismiss'){
+    const id = el.dataset.id;
+    if(!state.intelDismissed.includes(id)) state.intelDismissed.push(id);
+    state.intelUndo = id;
+    render();
+    toast('已忽略该情报','warn',{label:'撤销',fn:()=>{
+      const j = state.intelDismissed.indexOf(id); if(j>=0) state.intelDismissed.splice(j,1);
+      state.intelUndo = null; render(); toast('已恢复该情报');
+    }});
+  }
+  else if(a==='intel-restore'){ state.intelDismissed = []; state.intelUndo=null; render(); toast('已恢复全部忽略的情报'); }
+  else if(a==='time-review'){state.profilePage=3;state.module='profile';render();}
+  else if(a==='profile-retry'){vault.flush().catch(e=>toast(e.message,'warn'));}
+  else if(a==='profile-history'){showHistory();}
+  else if(a==='profile-export'){vault.action(profileExport);}
+  else if(a==='logout'){vault.logout();}
+  else if(a==='profile-delete'){
+    if(confirm('保留账号并清空本人的草稿、全部历史档案、课程、成果及反馈？此操作无法撤销，已导出的文件需自行删除。')) vault.erase();
+  }
+});
+document.addEventListener('input',e=>{
+  if(e.target.id==='ev-role' || e.target.id==='ev-materials'){
+    const item=findAchievement(state.evTarget); if(!item) return;
+    if(e.target.id==='ev-role') item.role=e.target.value.trim();
+    else item.materials=e.target.value.split(/\r?\n/).map(line=>line.trim()).filter(Boolean);
+    $('#ev-local-status').textContent=save()?'已保存在当前浏览器。':'浏览器未能保存，刷新后本次修改可能丢失。'; return;
+  }
+  if(e.target.id==='ev-text'){ state.evText=e.target.value; save(); return; }
+  if(e.target.dataset.courseContext && state.courseReview){
+    state.courseReview[e.target.dataset.courseContext]=e.target.value; save(); return;
+  }
+  if(e.target.id==='intel-search'){
+    state.intel.q = e.target.value;
+    const feed = $('#intel-feed'); if(feed) feed.innerHTML = intelFeedHTML();
+    save(); return;
+  }
+  if(e.target.id==='rec-search'){
+    const q = e.target.value.trim().toLowerCase();
+    document.querySelectorAll('#rec-groups .rec-row').forEach(row=>{
+      row.style.display = (row.dataset.name||'').toLowerCase().includes(q)?'':'none';
+    });
+    document.querySelectorAll('#rec-groups .rec-group').forEach(g=>{
+      const any = [...g.querySelectorAll('.rec-row')].some(r=>r.style.display!=='none');
+      g.style.display = any?'':'none';
+    });
+    return;
+  }
+  const f = e.target.dataset.field;
+  if(f){
+    if(f.indexOf('intel.')===0) return;
+    if(e.target.closest('#basic-profile')){ syncBasicProfile(); return; }
+    let v = e.target.value;
+    if(f==='weeklyHours') v = v===''?null:Math.max(0,Number(v));
+    state.profile[f] = v;
+    if($('#draft-status')){
+      $('#draft-status').textContent=profileStatus();
+      $('#draft-hours').textContent=state.profile.weeklyHours;
+      $('#draft-intern').textContent=state.profile.intern;
+    }
+    if(f==='weeklyHours'){ const hv = $('#hours-val'); if(hv) hv.innerHTML = v+'<small> 小时/周</small>'; }
+    save();
+  }
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='history-version'){showHistoryVersion();return;}
+  if(e.target.id==='ev-target'){ selectEvidenceTarget(e.target.value); render(); return; }
+  if(e.target.hasAttribute('data-review-decision') || e.target.hasAttribute('data-review-status')){
+    if(!state.courseReview) return;
+    const d=e.target.dataset;
+    const row=state.courseReview.rows[d.reviewDecision ?? d.reviewStatus];
+    row[d.reviewDecision!=null?'decision':'status']=e.target.value;
+    save(); return;
+  }
+  if(e.target.id==='file-input'){ if(e.target.files&&e.target.files[0]) handleFile(e.target.files[0]); e.target.value=''; return; }
+  if(e.target.dataset.rec!==undefined){
+    const n = e.target.dataset.rec, i = state.recSel.indexOf(n);
+    if(e.target.checked&&i<0) state.recSel.push(n);
+    if(!e.target.checked&&i>=0) state.recSel.splice(i,1);
+    const row = e.target.closest('.rec-row'); if(row) row.classList.toggle('sel',e.target.checked);
+    refreshRecBar(); save(); return;
+  }
+  if(e.target.dataset.up!==undefined){
+    const n = e.target.dataset.up, i = state.upSel.indexOf(n);
+    if(e.target.checked&&i<0) state.upSel.push(n);
+    if(!e.target.checked&&i>=0) state.upSel.splice(i,1);
+    const row = e.target.closest('.rec-row'); if(row) row.classList.toggle('sel',e.target.checked);
+    refreshUpBar(); save(); return;
+  }
+  if(e.target.dataset.calc){
+    state['calc'+e.target.dataset.calc] = e.target.value;
+    render();
+  }
+  if(e.target.dataset.field){
+    const f = e.target.dataset.field;
+    if(f.indexOf('intel.')===0){ state.intel[f.slice(6)] = e.target.value; render(); return; }
+    if(e.target.closest('#basic-profile')){ syncBasicProfile(); renderChrome(); return; }
+    state.profile[f] = f==='weeklyHours'?Number(e.target.value):e.target.value;
+    save(); renderChrome();
+  }
+});
+document.addEventListener('dragover',e=>{
+  const dz = e.target.closest&&e.target.closest('#dropzone');
+  if(dz){ e.preventDefault(); dz.classList.add('drag'); }
+});
+document.addEventListener('dragleave',e=>{
+  const dz = e.target.closest&&e.target.closest('#dropzone');
+  if(dz) dz.classList.remove('drag');
+});
+document.addEventListener('drop',e=>{
+  const dz = e.target.closest&&e.target.closest('#dropzone');
+  if(dz){ e.preventDefault(); dz.classList.remove('drag'); const f=e.dataTransfer&&e.dataTransfer.files[0]; if(f) handleFile(f); }
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeOverlays();
+  if((e.key==='Enter'||e.key===' ')&&e.target.id==='dropzone'){ e.preventDefault(); const fi=$('#file-input'); if(fi && e.target!==fi) fi.click(); }
+});
+
+/* ================= 启动 ================= */
+vault.start().catch(()=>{document.querySelector('#account-note').textContent='无法连接本机身份服务，请运行 python server.py 后刷新。';});
+</script>
+</body>
+</html>
